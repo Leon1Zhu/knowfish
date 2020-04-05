@@ -1,0 +1,10 @@
+{
+  "originUrl": "https://knowfish.scsfri.ac.cn/fishing/swagger/v2/api-docs",
+  "templatePath": "./pontTemplate",
+  "outDir": ".//src/services",
+  "surrounding": "javaScript",
+  "mocks": {
+    "enable": true
+  },
+  "templateType": "fetch"
+}

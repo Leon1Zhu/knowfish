@@ -1,12 +1,14 @@
-import Taro, { Component, Config } from '@tarojs/taro'
-import { Provider } from '@tarojs/redux'
+import Taro, { Component, Config } from "@tarojs/taro";
+import { Provider } from "@tarojs/redux";
+import { Request } from "./interceptor";
+import Index from "./pages/index";
+import ShareDetailPage from "./pages/share/shareDetail";
 
-import Index from './pages/index'
+import configStore from "./store";
 
-import configStore from './store'
-
-import './app.less'
-import './styles/reset.css'
+import "./app.less";
+import "./styles/reset.css";
+import { PontCore } from "./services/pontCore";
 
 // 如果需要在 h5 环境中开启 React Devtools
 // 取消以下注释：
@@ -14,10 +16,15 @@ import './styles/reset.css'
 //   require('nerv-devtools')
 // }
 
-const store = configStore()
+const store = configStore();
+
+console.log(PontCore);
+
+PontCore.useFetch((url, fetchOption) => {
+  return Request(url, fetchOption);
+});
 
 class App extends Component {
-
   /**
    * 指定config的类型声明为: Taro.Config
    *
@@ -27,33 +34,40 @@ class App extends Component {
    */
   config: Config = {
     pages: [
-      'pages/index/index'
+      "pages/share/shareDetail",
+      "pages/index/index",
+      "pages/share/index",
     ],
+    permission: {
+      "scope.userLocation": {
+        desc: "需要获取您的地理位置，请确认授权",
+      },
+    },
     window: {
-      backgroundTextStyle: 'light',
-      navigationBarBackgroundColor: '#fff',
-      navigationBarTitleText: 'WeChat',
-      navigationBarTextStyle: 'black'
-    }
-  }
+      backgroundTextStyle: "light",
+      navigationBarBackgroundColor: "#fff",
+      navigationBarTitleText: "WeChat",
+      navigationBarTextStyle: "black",
+    },
+  };
 
-  componentDidMount () {}
+  componentDidMount() {}
 
-  componentDidShow () {}
+  componentDidShow() {}
 
-  componentDidHide () {}
+  componentDidHide() {}
 
-  componentDidCatchError () {}
+  componentDidCatchError() {}
 
   // 在 App 类中的 render() 函数没有实际作用
   // 请勿修改此函数
-  render () {
+  render() {
     return (
       <Provider store={store}>
-        <Index />
+        <ShareDetailPage />
       </Provider>
-    )
+    );
   }
 }
 
-Taro.render(<App />, document.getElementById('app'))
+Taro.render(<App />, document.getElementById("app"));
