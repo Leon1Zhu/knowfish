@@ -1,22 +1,10 @@
 import { ComponentClass } from "react";
 import Taro, { Component, Config } from "@tarojs/taro";
-import { View, Button, Text } from "@tarojs/components";
-import { connect } from "@tarojs/redux";
-import { Request } from "../../interceptor";
-
-import { add, minus, asyncAdd } from "../../actions/counter";
+import { View, Button, Text, Icon, CoverImage } from "@tarojs/components";
 
 import "./index.less";
-
-// #region 书写注意
-//
-// 目前 typescript 版本还无法在装饰器模式下将 Props 注入到 Taro.Component 中的 props 属性
-// 需要显示声明 connect 的参数类型并通过 interface 的方式指定 Taro.Component 子类的 props
-// 这样才能完成类型检查和 IDE 的自动提示
-// 使用函数模式则无此限制
-// ref: https://github.com/DefinitelyTyped/DefinitelyTyped/issues/20796
-//
-// #endregion
+import { host } from "src/interceptor";
+import { getMonthAndDay } from "../utils";
 
 type PageStateProps = {
   counter: {
@@ -24,101 +12,103 @@ type PageStateProps = {
   };
 };
 
-type PageDispatchProps = {
-  add: () => void;
-  dec: () => void;
-  asyncAdd: () => any;
-};
-
 type PageOwnProps = {};
 
-type PageState = {};
+class PageState {
+  ismask: "none" | "block" = "none";
+}
 
-type IProps = PageStateProps & PageDispatchProps & PageOwnProps;
+type IProps = PageStateProps & PageOwnProps;
 
 interface Index {
   props: IProps;
 }
 
-@connect(
-  ({ counter }) => ({
-    counter,
-  }),
-  (dispatch) => ({
-    add() {
-      dispatch(add());
-    },
-    dec() {
-      dispatch(minus());
-    },
-    asyncAdd() {
-      dispatch(asyncAdd());
-    },
-  })
-)
-class Index extends Component {
-  /**
-   * 指定config的类型声明为: Taro.Config
-   *
-   * 由于 typescript 对于 object 类型推导只能推出 Key 的基本类型
-   * 对于像 navigationBarTextStyle: 'black' 这样的推导出的类型是 string
-   * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
-   */
+class Index extends Component<IProps, PageState> {
   config: Config = {
-    navigationBarTitleText: "首页",
+    navigationBarTitleText: "首页"
   };
 
-  componentWillReceiveProps(nextProps) {}
+  state = new PageState();
 
-  componentDidMount() {}
+  componentDidShow() {
+    if (
+      typeof this.$scope.getTabBar === "function" &&
+      this.$scope.getTabBar()
+    ) {
+      this.$scope.getTabBar().setData({
+        selected: 0
+      });
+    }
+  }
 
-  componentWillUnmount() {}
-
-  componentDidShow() {}
-
-  componentDidHide() {}
-
-  getUserInfo = () => {
-    Taro.getUserInfo({
-      success: (res) => {
-        console.log(res);
-      },
+  componentDidMount() {
+    Taro.getSetting({
+      success: res => {
+        if (res.authSetting["scope.userInfo"]) {
+          Taro.getUserInfo({
+            success: res => {
+              // 根据用户信息获取每日一猜
+            }
+          });
+        } else {
+          this.setState({
+            ismask: "block"
+          });
+        }
+      }
     });
-  };
+  }
+
+  getUserInfo = () => {};
+
+  // TODO 跳转搜索页面
+  handleClickToSearchPage() {}
+
+  getDailyGuess() {}
+
+  renderDayGuessContent() {
+    // TODO icon更新
+    return (
+      <View className="day-guess-content">
+        <View className="guess-day-info">{getMonthAndDay()}</View>
+        <i></i>
+        <CoverImage
+          className="day-guess-img"
+          src={`${host}/images/fig/fish/ff0300a.jpg`}
+        ></CoverImage>
+        <View className="day-guess-text">每日一猜·这是什么鱼?</View>
+        <ul className="day-guess-answer-list">
+          <li className="day-guess-answer-item">金鱼</li>
+          <li className="day-guess-answer-item">金鱼</li>
+          <li className="day-guess-answer-item">小丑鱼</li>
+        </ul>
+      </View>
+    );
+  }
 
   render() {
     return (
       <View className="index">
         <Button
-          className="add_btn"
-          onClick={() => {
-            Request("/getInfo.do?type=fish")
-              .then((res) => {
-                console.log(res);
-              })
-              .catch();
-            this.props.add();
-          }}
+          className="search-button"
+          type="default"
+          onClick={this.handleClickToSearchPage}
+          hover-class="other-button-hover"
         >
-          +
+          <Icon size="15" type="search" />
+          搜索
         </Button>
-        <Button className="dec_btn" onClick={this.props.dec}>
-          -
-        </Button>
-        <Button className="dec_btn" onClick={this.props.asyncAdd}>
-          async
-        </Button>
-        <View>
-          <Text>{this.props.counter.num}</Text>
+
+        {this.renderDayGuessContent()}
+
+        <View className="show-author" style={`display:${this.state.ismask}`}>
+          <View className="show-author-title">
+            <Button open-type="getUserInfo" onGetUserInfo={this.getUserInfo}>
+              授权登录
+            </Button>
+          </View>
         </View>
-        <Button
-          className="login-btn"
-          open-type="getUserInfo"
-          type="primary"
-          onGetUserInfo={this.getUserInfo}
-        >
-          登录
-        </Button>
       </View>
     );
   }

@@ -12,17 +12,28 @@ import "./index.less";
 
 class SharePicturePage extends Component {
   config: Config = {
-    navigationBarTitleText: "分享",
+    navigationBarTitleText: "分享"
   };
 
   qqmapsdk;
 
+  componentDidShow() {
+    if (
+      typeof this.$scope.getTabBar === "function" &&
+      this.$scope.getTabBar()
+    ) {
+      this.$scope.getTabBar().setData({
+        selected: 1
+      });
+    }
+  }
+
   componentDidMount() {
     Taro.showLoading({
-      title: "加载中",
+      title: "加载中"
     });
     this.qqmapsdk = new QQMap({
-      key: "JNHBZ-L2W23-N4D3S-Y57L4-E6O4Q-L5FWJ",
+      key: "JNHBZ-L2W23-N4D3S-Y57L4-E6O4Q-L5FWJ"
     });
 
     this.drawCanvasImg();
@@ -31,22 +42,22 @@ class SharePicturePage extends Component {
   drawCanvasImg() {
     Promise.all([
       Taro.getImageInfo({
-        src: `${host}/images/fig/fish/ff0300a.jpg`,
+        src: `${host}/images/fig/fish/ff0300a.jpg`
       }),
       Taro.getImageInfo({
-        src: `${host}/images/fig/fish/ff0300a.jpg`,
+        src: `${host}/images/fig/fish/ff0300a.jpg`
       }),
-      Taro.getUserInfo(),
+      Taro.getUserInfo()
     ])
-      .then((res) => {
+      .then(res => {
         setPictureBycreateCanvasContext(res, {}, this.qqmapsdk);
       })
-      .catch((err) => {
+      .catch(err => {
         Taro.hideLoading();
         Taro.showToast({
           title: "获取图片资源失败",
           icon: "none",
-          duration: 2000,
+          duration: 2000
         });
       });
   }
@@ -54,25 +65,25 @@ class SharePicturePage extends Component {
   onShareAppMessage(res) {
     return {
       title: "自定义转发标题",
-      path: `/page/shareDetail?id=${this.$router.params.id}`,
+      path: `/page/shareDetail?id=${this.$router.params.id}`
     };
   }
 
   saveToSystem = () => {
     Taro.canvasToTempFilePath(
       {
-        canvasId: "share-canvas",
+        canvasId: "share-canvas"
       },
       this
     )
-      .then((res) => {
+      .then(res => {
         return Taro.saveImageToPhotosAlbum({
-          filePath: res.tempFilePath,
+          filePath: res.tempFilePath
         });
       })
-      .then((res) => {
+      .then(res => {
         Taro.showToast({
-          title: "已保存到相册",
+          title: "已保存到相册"
         });
       });
   };

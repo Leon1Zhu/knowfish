@@ -11,13 +11,13 @@ import "./shareDetail.less";
 
 class ShareDetailPage extends Component {
   config: Config = {
-    navigationBarTitleText: "详情页",
+    navigationBarTitleText: "详情页"
   };
 
   componentDidMount() {
     // TODO 根据ID 获取详细信息，获取发布用户信息，先获取userinfo
 
-    Taro.getUserInfo().then((res) => {
+    Taro.getUserInfo().then(res => {
       console.log(res);
     });
   }
@@ -25,7 +25,7 @@ class ShareDetailPage extends Component {
   onShareAppMessage(res) {
     return {
       title: "自定义转发标题",
-      path: `/page/shareDetail?id=${this.$router.params.id}`,
+      path: `/page/shareDetail?id=${this.$router.params.id}`
     };
   }
 
@@ -45,7 +45,7 @@ class ShareDetailPage extends Component {
               className="head"
               src="https://wx.qlogo.cn/mmopen/vi_32/QpNbib2l6oB2JYj8V7OeKPXMvuHOUhuFomiaP9WySJR6643WxaFjCa7De6m36Etr4QOl5cHnf46lcLyEJIs0qmWw/132"
             />
-            <View className="user-name">朱亮</View>
+            <CoverView className="user-name">朱亮</CoverView>
           </CoverView>
 
           <View className="right-content">8小时前</View>

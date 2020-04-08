@@ -34,21 +34,50 @@ class App extends Component {
    */
   config: Config = {
     pages: [
-      "pages/share/shareDetail",
       "pages/index/index",
       "pages/share/index",
+      "pages/share/shareDetail"
     ],
     permission: {
       "scope.userLocation": {
-        desc: "需要获取您的地理位置，请确认授权",
-      },
+        desc: "需要获取您的地理位置，请确认授权"
+      }
+    },
+    tabBar: {
+      custom: true,
+      list: [
+        {
+          pagePath: "pages/index/index",
+          iconPath: "image/icon_component.png",
+          selectedIconPath: "image/icon_component_HL.png",
+          text: "首页"
+        },
+        {
+          pagePath: "pages/share/index",
+          iconPath: "image/icon_API.png",
+          selectedIconPath: "image/icon_API_HL.png",
+          text: "知识"
+        },
+        {
+          pagePath: "pages/share/shareDetail",
+          iconPath: "image/icon_API.png",
+          selectedIconPath: "image/icon_API_HL.png",
+          text: "交流"
+        },
+        {
+          pagePath: "pages/index/index",
+          iconPath: "image/icon_API.png",
+          selectedIconPath: "image/icon_API_HL.png",
+          text: "我的"
+        }
+      ]
     },
     window: {
       backgroundTextStyle: "light",
       navigationBarBackgroundColor: "#fff",
       navigationBarTitleText: "WeChat",
-      navigationBarTextStyle: "black",
-    },
+      navigationBarTextStyle: "black"
+    }
   };
 
   componentDidMount() {}
@@ -64,7 +93,7 @@ class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <ShareDetailPage />
+        <Index />
       </Provider>
     );
   }
