@@ -5,10 +5,7 @@
 import * as defs from '../../baseClass';
 import { PontCore } from '../../pontCore';
 
-export class Params {
-  /** type */
-  type;
-}
+export class Params {}
 
 export const init = new defs.Result();
 

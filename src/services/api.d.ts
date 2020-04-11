@@ -105,6 +105,54 @@ declare namespace API {
      * /api/getInfo.do
      */
     export namespace getInfo {
+      export class Params {}
+
+      export type Response = defs.Result;
+
+      export const init: Response;
+
+      export function request(params: Params, options?: any): Promise<Response>;
+    }
+
+    /**
+     * getInfoByBlurName
+     * /api/getInfoByBlurName.do
+     */
+    export namespace getInfoByBlurName {
+      export class Params {
+        /** name */
+        name: string;
+      }
+
+      export type Response = defs.Result;
+
+      export const init: Response;
+
+      export function request(params: Params, options?: any): Promise<Response>;
+    }
+
+    /**
+     * getInfoByLatinName
+     * /api/getInfoByLatinName.do
+     */
+    export namespace getInfoByLatinName {
+      export class Params {
+        /** latinName */
+        latinName: string;
+      }
+
+      export type Response = defs.Result;
+
+      export const init: Response;
+
+      export function request(params: Params, options?: any): Promise<Response>;
+    }
+
+    /**
+     * getInfoByType
+     * /api/getInfoByType.do
+     */
+    export namespace getInfoByType {
       export class Params {
         /** type */
         type: string;
@@ -118,10 +166,29 @@ declare namespace API {
     }
 
     /**
-     * Identify
+     * identify
      * /api/identify.do
      */
-    export namespace Identify {
+    export namespace identify {
+      export class Params {}
+
+      export type Response = defs.Result;
+
+      export const init: Response;
+
+      export function request(
+        params: Params,
+        form: FormData,
+        body: ObjectMap<any, object>,
+        options?: any,
+      ): Promise<Response>;
+    }
+
+    /**
+     * identifyByType
+     * /api/identifyByType.do
+     */
+    export namespace identifyByType {
       export class Params {
         /** type */
         type: string;
@@ -140,10 +207,10 @@ declare namespace API {
     }
 
     /**
-     * IdentifyByBase64
-     * /api/identifyByBase64.do
+     * identifyWithBase64ByType
+     * /api/identifyWithBase64ByType.do
      */
-    export namespace IdentifyByBase64 {
+    export namespace identifyWithBase64ByType {
       export class Params {
         /** img */
         img: string;

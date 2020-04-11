@@ -21,6 +21,95 @@
               "enum": [],
               "typeProperties": []
             },
+            "parameters": []
+          },
+          {
+            "consumes": [
+              "application/json"
+            ],
+            "description": "getInfoByBlurName",
+            "name": "getInfoByBlurName",
+            "method": "get",
+            "path": "/api/getInfoByBlurName.do",
+            "response": {
+              "typeArgs": [],
+              "typeName": "Result",
+              "isDefsType": true,
+              "templateIndex": -1,
+              "compileTemplateKeyword": "#/definitions/",
+              "enum": [],
+              "typeProperties": []
+            },
+            "parameters": [
+              {
+                "in": "query",
+                "description": "name",
+                "name": "name",
+                "required": true,
+                "dataType": {
+                  "typeArgs": [],
+                  "typeName": "string",
+                  "isDefsType": false,
+                  "templateIndex": -1,
+                  "compileTemplateKeyword": "#/definitions/",
+                  "enum": [],
+                  "typeProperties": []
+                }
+              }
+            ]
+          },
+          {
+            "consumes": [
+              "application/json"
+            ],
+            "description": "getInfoByLatinName",
+            "name": "getInfoByLatinName",
+            "method": "get",
+            "path": "/api/getInfoByLatinName.do",
+            "response": {
+              "typeArgs": [],
+              "typeName": "Result",
+              "isDefsType": true,
+              "templateIndex": -1,
+              "compileTemplateKeyword": "#/definitions/",
+              "enum": [],
+              "typeProperties": []
+            },
+            "parameters": [
+              {
+                "in": "query",
+                "description": "latinName",
+                "name": "latinName",
+                "required": true,
+                "dataType": {
+                  "typeArgs": [],
+                  "typeName": "string",
+                  "isDefsType": false,
+                  "templateIndex": -1,
+                  "compileTemplateKeyword": "#/definitions/",
+                  "enum": [],
+                  "typeProperties": []
+                }
+              }
+            ]
+          },
+          {
+            "consumes": [
+              "application/json"
+            ],
+            "description": "getInfoByType",
+            "name": "getInfoByType",
+            "method": "get",
+            "path": "/api/getInfoByType.do",
+            "response": {
+              "typeArgs": [],
+              "typeName": "Result",
+              "isDefsType": true,
+              "templateIndex": -1,
+              "compileTemplateKeyword": "#/definitions/",
+              "enum": [],
+              "typeProperties": []
+            },
             "parameters": [
               {
                 "in": "query",
@@ -43,10 +132,79 @@
             "consumes": [
               "multipart/form-data"
             ],
-            "description": "Identify",
-            "name": "Identify",
+            "description": "identify",
+            "name": "identify",
             "method": "post",
             "path": "/api/identify.do",
+            "response": {
+              "typeArgs": [],
+              "typeName": "Result",
+              "isDefsType": true,
+              "templateIndex": -1,
+              "compileTemplateKeyword": "#/definitions/",
+              "enum": [],
+              "typeProperties": []
+            },
+            "parameters": [
+              {
+                "in": "formData",
+                "description": "file",
+                "name": "file",
+                "required": true,
+                "dataType": {
+                  "typeArgs": [],
+                  "typeName": "string",
+                  "isDefsType": false,
+                  "templateIndex": -1,
+                  "compileTemplateKeyword": "#/definitions/",
+                  "enum": [],
+                  "typeProperties": []
+                }
+              },
+              {
+                "in": "body",
+                "description": "model",
+                "name": "model",
+                "required": false,
+                "dataType": {
+                  "typeArgs": [
+                    {
+                      "typeArgs": [],
+                      "typeName": "",
+                      "isDefsType": false,
+                      "templateIndex": -1,
+                      "compileTemplateKeyword": "#/definitions/",
+                      "enum": [],
+                      "typeProperties": []
+                    },
+                    {
+                      "typeArgs": [],
+                      "typeName": "object",
+                      "isDefsType": false,
+                      "templateIndex": -1,
+                      "compileTemplateKeyword": "#/definitions/",
+                      "enum": [],
+                      "typeProperties": []
+                    }
+                  ],
+                  "typeName": "ObjectMap",
+                  "isDefsType": false,
+                  "templateIndex": -1,
+                  "compileTemplateKeyword": "#/definitions/",
+                  "enum": [],
+                  "typeProperties": []
+                }
+              }
+            ]
+          },
+          {
+            "consumes": [
+              "multipart/form-data"
+            ],
+            "description": "identifyByType",
+            "name": "identifyByType",
+            "method": "post",
+            "path": "/api/identifyByType.do",
             "response": {
               "typeArgs": [],
               "typeName": "Result",
@@ -127,10 +285,10 @@
             "consumes": [
               "application/json"
             ],
-            "description": "IdentifyByBase64",
-            "name": "IdentifyByBase64",
+            "description": "identifyWithBase64ByType",
+            "name": "identifyWithBase64ByType",
             "method": "post",
-            "path": "/api/identifyByBase64.do",
+            "path": "/api/identifyWithBase64ByType.do",
             "response": {
               "typeArgs": [],
               "typeName": "Result",

@@ -17,8 +17,8 @@ Component({
       },
       {
         pagePath: "/pages/share/shareDetail",
-        iconPath: "/image/knowledge1.png",
-        selectedIconPath: "/image/knowledge2.png",
+        iconPath: "/image/jiaoliu1.png",
+        selectedIconPath: "/image/jiaoliu2.png",
         text: "交流"
       },
       {

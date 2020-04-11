@@ -2,6 +2,7 @@ import Taro, { Component, Config } from "@tarojs/taro";
 import { Provider } from "@tarojs/redux";
 import { Request } from "./interceptor";
 import Index from "./pages/index";
+import SearchPage from "./pages/search";
 
 import configStore from "./store";
 
@@ -34,6 +35,8 @@ class App extends Component {
    */
   config: Config = {
     pages: [
+      "pages/search/index",
+      "pages/detail/index",
       "pages/index/index",
       "pages/share/index",
       "pages/share/shareDetail",
@@ -61,8 +64,8 @@ class App extends Component {
         },
         {
           pagePath: "pages/share/shareDetail",
-          iconPath: "image/knowledge1.png",
-          selectedIconPath: "image/knowledge2.png",
+          iconPath: "image/jiaoliu1.png",
+          selectedIconPath: "image/jiaoliu2.png",
           text: "交流"
         },
         {
@@ -94,7 +97,7 @@ class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <Index />
+        <SearchPage />
       </Provider>
     );
   }

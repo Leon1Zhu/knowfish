@@ -5,7 +5,7 @@ import * as weibo from "./weibo";
 const API = {
   andriod,
   identifyHistory,
-  weibo,
+  weibo
 };
 
 export default API;

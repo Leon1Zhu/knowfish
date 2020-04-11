@@ -6,7 +6,7 @@ import Taro from "@tarojs/taro";
 
 const fly = new Fly();
 export const host = "https://knowfish.scsfri.ac.cn/fishing";
-fly.interceptors.request.use((request) => {
+fly.interceptors.request.use(request => {
   request.url = host + request.url;
 
   //给所有请求添加自定义header
@@ -18,14 +18,21 @@ fly.interceptors.request.use((request) => {
 });
 
 fly.interceptors.response.use(
-  (response) => {
+  response => {
     if (process.env.NODE_ENV === "development") {
       console.log("收到请求");
       console.log(JSON.parse(JSON.stringify(response)));
     }
     return response.data || response;
   },
-  (err) => {
+  err => {
+    Taro.showModal({
+      title: "小提示",
+      content: "网络错误",
+      showCancel: false,
+      success: function(res) {}
+    });
+    Taro.hideLoading();
     if (err.status == 0) {
       return "网络连接异常";
     } else if (err.status == 1) {
