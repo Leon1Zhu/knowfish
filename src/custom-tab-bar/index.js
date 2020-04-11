@@ -1,5 +1,3 @@
-import Taro from "@tarojs/taro";
-
 Component({
   data: {
     color: "#7A7E83",
@@ -7,26 +5,26 @@ Component({
     list: [
       {
         pagePath: "/pages/index/index",
-        iconPath: "/image/icon_component.png",
-        selectedIconPath: "/image/icon_component_HL.png",
+        iconPath: "/image/home1.png",
+        selectedIconPath: "/image/home2.png",
         text: "首页"
       },
       {
         pagePath: "/pages/share/index",
-        iconPath: "/image/icon_API.png",
-        selectedIconPath: "/image/icon_API_HL.png",
+        iconPath: "/image/knowledge1.png",
+        selectedIconPath: "/image/knowledge2.png",
         text: "知识"
       },
       {
         pagePath: "/pages/share/shareDetail",
-        iconPath: "/image/icon_API.png",
-        selectedIconPath: "/image/icon_API_HL.png",
+        iconPath: "/image/knowledge1.png",
+        selectedIconPath: "/image/knowledge2.png",
         text: "交流"
       },
       {
         pagePath: "/pages/index/index",
-        iconPath: "/image/icon_API.png",
-        selectedIconPath: "/image/icon_API_HL.png",
+        iconPath: "/image/me1.png",
+        selectedIconPath: "/image/me2.png",
         text: "我的"
       }
     ]
@@ -39,7 +37,7 @@ Component({
       this.setData({
         selected: data.index
       });
-      Taro.switchTab({ url });
+      wx.switchTab({ url });
     }
   }
 });

@@ -72,7 +72,7 @@ class Index extends Component<IProps, PageState> {
     return (
       <View className="day-guess-content">
         <View className="guess-day-info">{getMonthAndDay()}</View>
-        <i></i>
+        <View className="iconfont iconArtboardCopy"></View>
         <CoverImage
           className="day-guess-img"
           src={`${host}/images/fig/fish/ff0300a.jpg`}
@@ -83,6 +83,25 @@ class Index extends Component<IProps, PageState> {
           <li className="day-guess-answer-item">金鱼</li>
           <li className="day-guess-answer-item">小丑鱼</li>
         </ul>
+      </View>
+    );
+  }
+
+  toScan(res) {
+    Taro.navigateTo({
+      url: "/pages/camera/camera"
+    });
+  }
+
+  renderCameraContent() {
+    return (
+      <View className="camera-wrapper">
+        <View className="camera-content" onClick={this.toScan}>
+          <View className="iconfont iconcamera"></View>
+          <View className="photo-text">拍照</View>
+        </View>
+
+        <View className="select-from-photo">从相册选择</View>
       </View>
     );
   }
@@ -101,6 +120,8 @@ class Index extends Component<IProps, PageState> {
         </Button>
 
         {this.renderDayGuessContent()}
+
+        {this.renderCameraContent()}
 
         <View className="show-author" style={`display:${this.state.ismask}`}>
           <View className="show-author-title">
