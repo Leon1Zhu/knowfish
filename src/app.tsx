@@ -2,7 +2,7 @@ import Taro, { Component, Config } from "@tarojs/taro";
 import { Provider } from "@tarojs/redux";
 import { Request } from "./interceptor";
 import Index from "./pages/index";
-import SearchPage from "./pages/search";
+import AuthPage from "./pages/AuthPage/AuthPage";
 
 import configStore from "./store";
 
@@ -19,25 +19,17 @@ import { PontCore } from "./services/pontCore";
 
 const store = configStore();
 
-console.log(PontCore);
-
 PontCore.useFetch((url, fetchOption) => {
   return Request(url, fetchOption);
 });
 
 class App extends Component {
-  /**
-   * 指定config的类型声明为: Taro.Config
-   *
-   * 由于 typescript 对于 object 类型推导只能推出 Key 的基本类型
-   * 对于像 navigationBarTextStyle: 'black' 这样的推导出的类型是 string
-   * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
-   */
   config: Config = {
     pages: [
+      "pages/index/index",
+      "pages/authPage/authPage",
       "pages/search/index",
       "pages/detail/index",
-      "pages/index/index",
       "pages/share/index",
       "pages/share/shareDetail",
       "pages/camera/camera"
@@ -57,13 +49,13 @@ class App extends Component {
           text: "首页"
         },
         {
-          pagePath: "pages/share/index",
+          pagePath: "pages/index/index",
           iconPath: "image/knowledge1.png",
           selectedIconPath: "image/knowledge2.png",
           text: "知识"
         },
         {
-          pagePath: "pages/share/shareDetail",
+          pagePath: "pages/index/index",
           iconPath: "image/jiaoliu1.png",
           selectedIconPath: "image/jiaoliu2.png",
           text: "交流"
@@ -84,7 +76,34 @@ class App extends Component {
     }
   };
 
-  componentDidMount() {}
+  componentDidMount() {
+    Taro.getSetting({
+      success: res => {
+        console.log(this);
+        console.log(this.$router);
+        if (!res.authSetting["scope.userInfo"]) {
+          let redirtUrl = this.$router.path || this.$router.params.path;
+
+          const params = this.$router.params;
+
+          (Object.keys(params) || []).map(key => {
+            if (!redirtUrl.includes(`${key}=`)) {
+              if (redirtUrl.indexOf("?")) {
+                redirtUrl = redirtUrl += `?key=${params[key]}`;
+              } else {
+                redirtUrl = redirtUrl += `&key=${params[key]}`;
+              }
+            }
+          });
+
+          // 跳转授权页面
+          Taro.navigateTo({
+            url: `/pages/authPage/authPage?redUrl=${redirtUrl}`
+          });
+        }
+      }
+    });
+  }
 
   componentDidShow() {}
 
@@ -97,7 +116,7 @@ class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <SearchPage />
+        <Index />
       </Provider>
     );
   }

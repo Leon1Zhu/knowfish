@@ -1,16 +1,16 @@
 {
-  "miniprogramRoot": "dist/",
-  "projectname": "knowFish",
-  "description": "南海小渔",
-  "appid": "wx2b1171248cfc30d6",
-  "setting": {
-    "urlCheck": true,
-    "es6": false,
-    "postcss": false,
-    "minified": false
-  },
-  "compileType": "miniprogram",
-  "simulatorType": "wechat",
-  "simulatorPluginLibVersion": {},
-  "condition": {}
+	"miniprogramRoot": "dist/",
+	"projectname": "knowFish",
+	"description": "南海小渔",
+	"appid": "wx2b1171248cfc30d6",
+	"setting": {
+		"urlCheck": true,
+		"es6": false,
+		"postcss": false,
+		"minified": false
+	},
+	"compileType": "miniprogram",
+	"simulatorType": "wechat",
+	"simulatorPluginLibVersion": {},
+	"condition": {}
 }

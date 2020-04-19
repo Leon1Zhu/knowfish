@@ -1,21 +1,14 @@
-import { ADD, MINUS } from "../constants/counter";
+import { SETSEARCHRESULT } from "../constants/counter";
 
 const INITIAL_STATE = {
-  accessToken: "",
-  num: 0,
+  cameraSearchResult: []
 };
 
 export default function reducer(state = INITIAL_STATE, action) {
   switch (action.type) {
-    case ADD:
+    case SETSEARCHRESULT:
       return {
-        ...state,
-        num: state.num + 1,
-      };
-    case MINUS:
-      return {
-        ...state,
-        num: state.num - 1,
+        ...state
       };
     default:
       return state;

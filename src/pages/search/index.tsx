@@ -4,6 +4,7 @@ import SearchList from "../commons/searchList";
 
 import "./index.less";
 import API from "src/services/mods";
+import { connect } from "@tarojs/redux";
 const searchList = [
   { name: "鲤鱼", latinname: "Cyprinus" },
   { name: "鲈鱼", latinname: "Lateolabrax_japonicus" },
@@ -13,11 +14,21 @@ const searchList = [
   { name: "翻车鲀", latinname: "Mola_mola" }
 ];
 
-class State {
-  searchData: [];
-}
+type PageStateProps = {
+  searchResultReducer: {
+    cameraSearchResult: any[];
+  };
+};
 
-class SearchPage extends Component<any, State> {
+class State {
+  searchData: any[];
+}
+@connect(({ searchResultReducer }) => {
+  return {
+    searchResultReducer
+  };
+})
+class SearchPage extends Component<PageStateProps, State> {
   state = new State();
 
   constructor(props) {
@@ -28,6 +39,26 @@ class SearchPage extends Component<any, State> {
   config: Config = {
     navigationBarTitleText: "搜索"
   };
+
+  componentDidMount() {
+    const fromPage = this.$router.params.fromPage;
+    if (fromPage === "camera") {
+      this.setState({
+        searchData: this.props.searchResultReducer.cameraSearchResult
+      });
+    }
+  }
+
+  componentWillReceiveProps(nextProps: PageStateProps) {
+    if (
+      nextProps.searchResultReducer.cameraSearchResult !==
+      this.props.searchResultReducer.cameraSearchResult
+    ) {
+      this.setState({
+        searchData: nextProps.searchResultReducer.cameraSearchResult
+      });
+    }
+  }
 
   toScan(res) {
     Taro.navigateTo({

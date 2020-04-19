@@ -1,30 +1,28 @@
 import { ComponentClass } from "react";
 import Taro, { Component, Config } from "@tarojs/taro";
+import { connect } from "@tarojs/redux";
 import { View, Button, Text, Icon, CoverImage } from "@tarojs/components";
+import { setSearchResult } from "../../actions/searchActions";
 
 import "./index.less";
 import { host } from "src/interceptor";
 import { getMonthAndDay } from "../utils";
 
-type PageStateProps = {
-  counter: {
-    num: number;
-  };
-};
-
-type PageOwnProps = {};
-
 class PageState {
-  ismask: "none" | "block" = "none";
+  dailyGuessData = {} as any;
 }
 
-type IProps = PageStateProps & PageOwnProps;
-
-interface Index {
-  props: IProps;
-}
-
-class Index extends Component<IProps, PageState> {
+@connect(
+  ({ searchResultReducer }) => ({
+    searchResultReducer
+  }),
+  dispatch => ({
+    setResult(data) {
+      dispatch(setSearchResult(data));
+    }
+  })
+)
+class Index extends Component<any, PageState> {
   config: Config = {
     navigationBarTitleText: "首页"
   };
@@ -42,37 +40,30 @@ class Index extends Component<IProps, PageState> {
     }
   }
 
-  componentDidMount() {
-    Taro.getSetting({
-      success: res => {
-        if (res.authSetting["scope.userInfo"]) {
-          Taro.getUserInfo({
-            success: res => {
-              // 根据用户信息获取每日一猜
-            }
-          });
-        } else {
-          this.setState({
-            ismask: "block"
-          });
-        }
-      }
-    });
-  }
-
-  getUserInfo = () => {};
+  componentDidMount() {}
 
   getDailyGuess() {}
+
+  goToShare = () => {
+    const { dailyGuessData } = this.state;
+    // TODO 拉丁名动态替换
+    Taro.navigateTo({
+      url: `/pages/share/index?latinName=Mola_mola`
+    });
+  };
 
   renderDayGuessContent() {
     // TODO icon更新
     return (
       <View className="day-guess-content">
         <View className="guess-day-info">{getMonthAndDay()}</View>
-        <View className="iconfont iconArtboardCopy"></View>
+        <View
+          className="iconfont iconArtboardCopy"
+          onClick={this.goToShare}
+        ></View>
         <CoverImage
           className="day-guess-img"
-          src={`${host}/images/fig/fish/ff0300a.jpg`}
+          src={`${host}/images/a0067.jpg`}
         ></CoverImage>
         <View className="day-guess-text">每日一猜·这是什么鱼?</View>
         <ul className="day-guess-answer-list">
@@ -84,8 +75,83 @@ class Index extends Component<IProps, PageState> {
     );
   }
 
+  chooseimage = () => {
+    var that = this;
+    Taro.chooseImage({
+      count: 1, // 默认9
+      sizeType: ["compressed"], // 指定是原图或压缩图，默认二者都有 original,compressed
+      sourceType: ["album"], // 可以指定来源是相册还是相机，默认二者都有
+      success: res => {
+        var that1 = that;
+
+        // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
+        var tempFilePaths = res.tempFilePaths;
+        Taro.showLoading({
+          title: "识别中"
+        });
+        console.log(tempFilePaths[0]);
+        Taro.uploadFile({
+          url: host + "/api/identify.do",
+          filePath: tempFilePaths[0],
+          name: "file",
+          success: function(res) {
+            try {
+              var code = JSON.parse(res.data).code;
+            } catch (e) {
+              Taro.showModal({
+                title: "小提示",
+                content: "网络错误",
+                showCancel: false
+              });
+            }
+            if (code == 1) {
+              Taro.showModal({
+                title: "小提示",
+                content: "抱歉,我们暂不能识别该生物,谢谢您的使用",
+                showCancel: false
+              });
+            }
+            if (code == 0) {
+              var outcome = JSON.parse(res.data).data;
+              var ids = [];
+              for (var i = 0; i < outcome.length; i++) {
+                if (outcome[i].id >= 0 && outcome[i].id <= 9999999) {
+                  ids.push(outcome[i].id as never);
+                }
+              }
+              if (ids.length == 0) {
+                Taro.showModal({
+                  title: "小提示",
+                  content: "抱歉,我们暂不能识别该生物,谢谢您的使用",
+                  showCancel: false
+                });
+              }
+
+              this.props.setResult(outcome);
+              Taro.navigateTo({
+                url: `/pages/detail/index?latinName=${outcome[0] &&
+                  outcome[0].latinName}`
+              });
+            }
+          },
+          fail: function(res) {
+            console.log("failed to result");
+            Taro.showToast({
+              title: "网络错误",
+              icon: "loading",
+              duration: 1500
+            });
+          },
+          complete: function(res) {
+            Taro.hideLoading();
+          }
+        });
+      }
+    });
+  };
+
   toScan(res) {
-    Taro.navigateTo({
+    wx.navigateTo({
       url: "/pages/camera/camera"
     });
   }
@@ -98,7 +164,9 @@ class Index extends Component<IProps, PageState> {
           <View className="photo-text">拍照</View>
         </View>
 
-        <View className="select-from-photo">从相册选择</View>
+        <View className="select-from-photo" onClick={this.chooseimage}>
+          从相册选择
+        </View>
       </View>
     );
   }
@@ -123,16 +191,8 @@ class Index extends Component<IProps, PageState> {
         {this.renderDayGuessContent()}
 
         {this.renderCameraContent()}
-
-        <View className="show-author" style={`display:${this.state.ismask}`}>
-          <View className="show-author-title">
-            <Button open-type="getUserInfo" onGetUserInfo={this.getUserInfo}>
-              授权登录
-            </Button>
-          </View>
-        </View>
       </View>
     );
   }
 }
-export default Index as ComponentClass<PageOwnProps, PageState>;
+export default Index as ComponentClass<any, PageState>;

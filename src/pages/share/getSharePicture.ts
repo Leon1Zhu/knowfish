@@ -11,7 +11,7 @@ export function setPictureBycreateCanvasContext(
     Taro.getImageInfo.SuccessCallbackResult,
     Taro.getUserInfo.SuccessCallbackResult
   ],
-  finshInfo: any,
+  fishInfo: any,
   qqmapsdk: any
 ) {
   const ctx = Taro.createCanvasContext("share-canvas");
@@ -23,37 +23,74 @@ export function setPictureBycreateCanvasContext(
   ctx.drawImage(data[0].path, -88, 0, 496, 330);
   ctx.fill();
 
-  setLines(ctx);
+  setLines(ctx, fishInfo);
 
-  circleImg(ctx, data[1].path, 250, 490, 30);
+  circleImg(ctx, data[1].path, 240, 470, 40);
 
   // 绘制底部
   getLocationInfo(ctx, data[2], qqmapsdk);
 }
 
-function setLines(ctx: Taro.CanvasContext) {
-  ctx.beginPath();
-  ctx.moveTo(0, 300);
-  ctx.lineTo(80, 300);
-  ctx.moveTo(245, 300);
-  ctx.lineTo(325, 300);
-  ctx.setStrokeStyle("#FFFFFF");
-  ctx.lineWidth = 1;
+function setLines(ctx: Taro.CanvasContext, fishInfo: any) {
+  // ctx.beginPath();
+  // ctx.moveTo(0, 300);
+  // ctx.lineTo(80, 300);
+  // ctx.moveTo(245, 300);
+  // ctx.lineTo(325, 300);
+  // ctx.setStrokeStyle("#FFFFFF");
+  // ctx.lineWidth = 1;
 
-  ctx.setFontSize(20);
-  ctx.setFillStyle("rgba(255,255,255,0.9)");
-  ctx.fillText("小丑鱼", getTextX("小丑鱼"), 307);
+  // ctx.setFontSize(20);
+  // ctx.setFillStyle("rgba(255,255,255,0.9)");
+  // ctx.fillText("小丑鱼", getTextX("小丑鱼"), 307);
+  // ctx.stroke();
+
+  // ctx.beginPath();
+  // ctx.arc(100, 300, 2, 0, 2 * Math.PI);
+  // ctx.setFillStyle("#FFFFFF");
+  // ctx.fill();
+
+  // ctx.beginPath();
+  // ctx.arc(220, 300, 2, 0, 2 * Math.PI);
+  // ctx.setFillStyle("#FFFFFF");
+  // ctx.fill();
+
+  ctx.beginPath();
+  ctx.setFontSize(16);
+  ctx.setFillStyle("#131313");
+  ctx.fillText(fishInfo.name, getNameLeft(fishInfo.name), 360);
+  ctx.setFontSize(14);
+  setFeature(ctx, fishInfo.feature);
   ctx.stroke();
+}
 
-  ctx.beginPath();
-  ctx.arc(100, 300, 2, 0, 2 * Math.PI);
-  ctx.setFillStyle("#FFFFFF");
-  ctx.fill();
+function getNameLeft(name: string) {
+  const strLength = name.length * 16;
+  return (325 - strLength) / 2;
+}
 
-  ctx.beginPath();
-  ctx.arc(220, 300, 2, 0, 2 * Math.PI);
-  ctx.setFillStyle("#FFFFFF");
-  ctx.fill();
+function setFeature(ctx: Taro.CanvasContext, feature: string) {
+  const chr = feature.split("");
+  let temp = "";
+  let row = [] as any[];
+
+  for (var a = 0; a < chr.length; a++) {
+    if (
+      ctx.measureText(temp).width < 305 &&
+      ctx.measureText(temp + chr[a]).width <= 305
+    ) {
+      temp += chr[a];
+    } //context.measureText(text).width  测量文本text的宽度
+    else {
+      row.push(temp);
+      temp = chr[a];
+    }
+  }
+  row.push(temp);
+
+  for (var b = 0; b < row.length; b++) {
+    ctx.fillText(row[b], 10, 370 + (b + 1) * 20); //字体20，间隔24。类似行高
+  }
 }
 
 function getLocationInfo(
@@ -67,9 +104,9 @@ function getLocationInfo(
       qqmapsdk.reverseGeocoder({
         location: {
           latitude: res.latitude,
-          longitude: res.longitude,
+          longitude: res.longitude
         },
-        complete: function (res) {
+        complete: function(res) {
           const userText = `${_.get(
             userInfo,
             "userInfo.nickName",
@@ -77,9 +114,9 @@ function getLocationInfo(
           )} 拍摄于 ${_.get(res, "result.address_component.city", "")}`;
 
           setFootContent(userText, userInfo, ctx);
-        },
+        }
       });
-    },
+    }
   });
 }
 

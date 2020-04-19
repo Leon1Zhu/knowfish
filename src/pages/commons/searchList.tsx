@@ -5,17 +5,15 @@ import { View, CoverImage } from "@tarojs/components";
 import "./searchList.less";
 import { host } from "src/interceptor";
 
-class Props {
-  data = [];
-}
+type Props = {
+  data: any[];
+};
 
 class State {
   canShowMatchingRate = false;
 }
 
-class SearchList extends Component<Props, State> {
-  defaultProps = new Props();
-
+class SearchList extends Component<any, State> {
   state = new State();
 
   componentDidMount() {
@@ -35,7 +33,7 @@ class SearchList extends Component<Props, State> {
 
   renderItem(data: any) {
     const { canShowMatchingRate } = this.state;
-    const coverImgUrl = ((data.image as string).split(",") || [])[0];
+    const coverImgUrl = data.smallImage;
 
     return (
       <View
@@ -86,4 +84,4 @@ class SearchList extends Component<Props, State> {
   }
 }
 
-export default SearchList as ComponentClass<Props, State>;
+export default SearchList as ComponentClass<Props & PageStateProps, State>;

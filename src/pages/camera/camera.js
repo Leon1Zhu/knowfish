@@ -1,3 +1,4 @@
+/* eslint-disable taro/this-props-function */
 /* eslint-disable @typescript-eslint/class-name-casing */
 /* eslint-disable jsx-quotes */
 /* eslint-disable no-shadow */
@@ -14,10 +15,12 @@ import {
   CoverView,
   CoverImage
 } from "@tarojs/components";
+import { connect } from "@tarojs/redux";
 import { host } from "src/interceptor";
 
 import Taro from "@tarojs/taro";
 import withWeapp from "@tarojs/with-weapp";
+import { setSearchResult } from "../../actions/searchActions";
 import "./camera.less";
 
 @withWeapp({
@@ -41,24 +44,11 @@ import "./camera.less";
   },
 
   /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function() {},
-
-  /**
    * 生命周期函数--监听页面显示
    */
   onShow: function() {
     this.setData({
       condition: ""
-    });
-  },
-
-  goto_search: function(event) {
-    var that = this;
-    var zero = 0;
-    Taro.navigateTo({
-      url: "../search/search?write=" + zero
     });
   },
 
@@ -93,66 +83,69 @@ import "./camera.less";
         var tempFilePaths = res.tempImagePath;
         Taro.showLoading({
           title: "识别中"
-        }),
-          Taro.uploadFile({
-            url: host + "/identify.do",
-            filePath: res.tempImagePath,
-            name: "file",
-            formData: {
-              type: "fish"
-            },
-            success: function(res) {
-              try {
-                var code = JSON.parse(res.data).code;
-              } catch (e) {
-                Taro.showModal({
-                  title: "小提示",
-                  content: "抱歉,我们暂不能识别该生物,谢谢您的使用",
-                  showCancel: "false",
-                  success: function(res) {}
-                });
-              }
-              if (code == 1) {
-                Taro.showModal({
-                  title: "小提示",
-                  content: "抱歉,我们暂不能识别该生物,谢谢您的使用",
-                  showCancel: "false",
-                  success: function(res) {}
-                });
-              }
-              if (code == 0) {
-                var outcome = JSON.parse(res.data).data;
-                var ids = [];
-                var rates = [];
-                for (var i = 0; i < outcome.length; i++) {
-                  if (outcome[i].id >= 0 && outcome[i].id <= 9999999) {
-                    ids.push(outcome[i].id);
-                    rates.push(outcome[i].recognitionRate);
-                  }
-                }
-                if (ids.length == 0) {
-                  Taro.showModal({
-                    title: "小提示",
-                    content: "抱歉,我们暂不能识别该生物,谢谢您的使用",
-                    showCancel: "false",
-                    success: function(res) {}
-                  });
-                }
-              }
-            },
-            fail: function(res1) {
-              console.log("failed to result");
+        });
+
+        Taro.uploadFile({
+          url: host + "/api/identify.do",
+          filePath: res.tempImagePath,
+          name: "file",
+          success: function(res) {
+            console.log(res);
+            try {
+              var code = JSON.parse(res.data).code;
+            } catch (e) {
               Taro.showModal({
                 title: "小提示",
                 content: "抱歉,我们暂不能识别该生物,谢谢您的使用",
                 showCancel: "false",
                 success: function(res) {}
               });
-            },
-            complete: function(res1) {
-              Taro.hideLoading();
             }
-          });
+            if (code == 1) {
+              Taro.showModal({
+                title: "小提示",
+                content: "抱歉,我们暂不能识别该生物,谢谢您的使用",
+                showCancel: "false",
+                success: function(res) {}
+              });
+            }
+            if (code == 0) {
+              var outcome = JSON.parse(res.data).data;
+              var ids = [];
+              for (var i = 0; i < outcome.length; i++) {
+                if (outcome[i].id >= 0 && outcome[i].id <= 9999999) {
+                  ids.push(outcome[i].id);
+                }
+              }
+              if (ids.length == 0) {
+                Taro.showModal({
+                  title: "小提示",
+                  content: "抱歉,我们暂不能识别该生物,谢谢您的使用",
+                  showCancel: "false",
+                  success: function(res) {}
+                });
+              }
+
+              this.props.setResult(outcome);
+              Taro.navigateTo({
+                url: `/pages/detail/index?latinName=${outcome[0] &&
+                  outcome[0].latinName}`
+              });
+            }
+          },
+          fail: function(res1) {
+            console.log("failed to result");
+            Taro.showModal({
+              title: "小提示",
+              content: "抱歉,我们暂不能识别该生物,谢谢您的使用",
+              showCancel: "false",
+              success: function(res) {}
+            });
+          },
+          complete: function(res1) {
+            Taro.hideLoading();
+          }
+        });
       }
     });
   },
@@ -166,79 +159,85 @@ import "./camera.less";
       success: res => {
         var that1 = that;
 
-        console.log("choose:" + res.tempFilePaths[0]);
         // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
         var tempFilePaths = res.tempFilePaths;
         Taro.showLoading({
           title: "识别中"
-        }),
-          Taro.uploadFile({
-            url: host + "/identify.do",
-            filePath: tempFilePaths[0],
-            name: "file",
-            formData: {
-              type: "fish"
-            },
-            success: function(res) {
-              //console.log(res);
-              try {
-                var code = JSON.parse(res.data).code;
-              } catch (e) {
-                Taro.showModal({
-                  title: "小提示",
-                  content: "网络错误",
-                  showCancel: "false",
-                  success: function(res) {}
-                });
+        });
+        Taro.uploadFile({
+          url: host + "/api/identify.do",
+          filePath: tempFilePaths[0],
+          name: "file",
+          success: function(res) {
+            console.log(res);
+            try {
+              var code = JSON.parse(res.data).code;
+            } catch (e) {
+              Taro.showModal({
+                title: "小提示",
+                content: "网络错误",
+                showCancel: "false",
+                success: function(res) {}
+              });
+            }
+            if (code == 1) {
+              Taro.showModal({
+                title: "小提示",
+                content: "抱歉,我们暂不能识别该生物,谢谢您的使用",
+                showCancel: "false",
+                success: function(res) {}
+              });
+            }
+            if (code == 0) {
+              var outcome = JSON.parse(res.data).data;
+              var ids = [];
+              var rates = [];
+              for (var i = 0; i < outcome.length; i++) {
+                if (outcome[i].id >= 0 && outcome[i].id <= 9999999) {
+                  ids.push(outcome[i].id);
+                  rates.push(outcome[i].recognitionRate);
+                }
               }
-              if (code == 1) {
+              if (ids.length == 0) {
                 Taro.showModal({
                   title: "小提示",
                   content: "抱歉,我们暂不能识别该生物,谢谢您的使用",
-                  showCancel: "false",
-                  success: function(res) {}
+                  showCancel: "false"
                 });
               }
-              if (code == 0) {
-                var outcome = JSON.parse(res.data).data;
-                var ids = [];
-                var rates = [];
-                for (var i = 0; i < outcome.length; i++) {
-                  if (outcome[i].id >= 0 && outcome[i].id <= 9999999) {
-                    ids.push(outcome[i].id);
-                    rates.push(outcome[i].recognitionRate);
-                  }
-                }
-                if (ids.length == 0) {
-                  Taro.showModal({
-                    title: "小提示",
-                    content: "抱歉,我们暂不能识别该生物,谢谢您的使用",
-                    showCancel: "false"
-                  });
-                }
-              }
-            },
-            fail: function(res) {
-              console.log("failed to result");
-              Taro.showToast({
-                title: "网络错误",
-                icon: "loading",
-                duration: 1500
-              });
-            },
-            complete: function(res) {
-              Taro.hideLoading();
-              that.setData({
-                snap_state: "takePhoto",
-                album_state: "chooseimage",
-                history_state: "goto_history"
+
+              this.props.setResult(outcome);
+              Taro.navigateTo({
+                url: `/pages/detail/index?latinName=${outcome[0] &&
+                  outcome[0].latinName}`
               });
             }
-          });
+          },
+          fail: function(res) {
+            Taro.showToast({
+              title: "网络错误",
+              icon: "loading",
+              duration: 1500
+            });
+          },
+          complete: function(res) {
+            Taro.hideLoading();
+          }
+        });
       }
     });
   }
 })
+@connect(
+  ({ searchResultReducer }) => ({
+    searchResultReducer
+  }),
+  dispatch => ({
+    setResult(data) {
+      dispatch(setSearchResult(data));
+    }
+  })
+)
 class _C extends Taro.Component {
   config = {
     navigationBarTitleText: "识鱼",
@@ -246,13 +245,7 @@ class _C extends Taro.Component {
   };
 
   render() {
-    const {
-      src,
-      condition,
-      snap_state,
-      history_state,
-      album_state
-    } = this.data;
+    const { src, condition } = this.data;
     return (
       <Block>
         <View>

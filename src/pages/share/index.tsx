@@ -9,8 +9,13 @@ import { setPictureBycreateCanvasContext } from "./getSharePicture";
 const QQMap = require("../../lib/qqmap-wx-jssdk.min.js");
 
 import "./index.less";
+import API from "src/services/mods";
 
-class SharePicturePage extends Component {
+class State {
+  fishData: any = {};
+}
+
+class SharePicturePage extends Component<any, State> {
   config: Config = {
     navigationBarTitleText: "分享"
   };
@@ -36,21 +41,31 @@ class SharePicturePage extends Component {
       key: "JNHBZ-L2W23-N4D3S-Y57L4-E6O4Q-L5FWJ"
     });
 
-    this.drawCanvasImg();
+    const latinName = this.$router.params.latinName;
+    API.andriod.getInfoByLatinName
+      .request({
+        latinName
+      })
+      .then(res => {
+        this.setState({
+          fishData: res.data
+        });
+        this.drawCanvasImg(res.data);
+      });
   }
 
-  drawCanvasImg() {
+  drawCanvasImg(data: any) {
     Promise.all([
       Taro.getImageInfo({
-        src: `${host}/images/fig/fish/ff0300a.jpg`
+        src: `${host}${data.smallImage}`
       }),
       Taro.getImageInfo({
-        src: `${host}/images/fig/fish/ff0300a.jpg`
+        src: `${host}/smallImage/weixin_qr.jpg`
       }),
       Taro.getUserInfo()
     ])
       .then(res => {
-        setPictureBycreateCanvasContext(res, {}, this.qqmapsdk);
+        setPictureBycreateCanvasContext(res, data, this.qqmapsdk);
       })
       .catch(err => {
         Taro.hideLoading();
@@ -63,9 +78,11 @@ class SharePicturePage extends Component {
   }
 
   onShareAppMessage(res) {
+    const { fishData } = this.state;
+    console.log(fishData);
     return {
-      title: "自定义转发标题",
-      path: `/page/shareDetail?id=${this.$router.params.id}`
+      title: fishData.name,
+      path: `/pages/share/shareDetail?latinName=${this.$router.params.latinName}`
     };
   }
 
@@ -98,8 +115,12 @@ class SharePicturePage extends Component {
         ></canvas>
 
         <View className="share-btns">
-          <Button openType="share">分享给好友</Button>
-          <Button onClick={this.saveToSystem}>保存图片</Button>
+          <Button openType="share" className="share-btn">
+            分享给好友
+          </Button>
+          <Button className="save-img" onClick={this.saveToSystem}>
+            保存美图
+          </Button>
         </View>
       </View>
     );

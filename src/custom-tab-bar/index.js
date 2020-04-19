@@ -10,13 +10,13 @@ Component({
         text: "首页"
       },
       {
-        pagePath: "/pages/share/index",
+        pagePath: "/pages/index/index",
         iconPath: "/image/knowledge1.png",
         selectedIconPath: "/image/knowledge2.png",
         text: "知识"
       },
       {
-        pagePath: "/pages/share/shareDetail",
+        pagePath: "/pages/index/index",
         iconPath: "/image/jiaoliu1.png",
         selectedIconPath: "/image/jiaoliu2.png",
         text: "交流"
