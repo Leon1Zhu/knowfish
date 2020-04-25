@@ -69,7 +69,7 @@ import "./camera.less";
     };
   },
 
-  takePhoto() {
+  takePhoto: () => {
     var that = this;
     const ctx = Taro.createCameraContext();
     ctx.takePhoto({
@@ -88,6 +88,10 @@ import "./camera.less";
         Taro.uploadFile({
           url: host + "/api/identify.do",
           filePath: res.tempImagePath,
+          formData: {
+            userId:
+              this.props.userReducer && this.props.userReducer.loginInfo.openId
+          },
           name: "file",
           success: res => {
             console.log(res);
@@ -167,6 +171,10 @@ import "./camera.less";
         Taro.uploadFile({
           url: host + "/api/identify.do",
           filePath: tempFilePaths[0],
+          formData: {
+            userId:
+              this.props.userReducer && this.props.userReducer.loginInfo.openId
+          },
           name: "file",
           success: res => {
             console.log(res);
@@ -229,8 +237,9 @@ import "./camera.less";
   }
 })
 @connect(
-  ({ searchResultReducer }) => ({
-    searchResultReducer
+  ({ searchResultReducer, userReducer }) => ({
+    searchResultReducer,
+    userReducer
   }),
   dispatch => ({
     setResult(data) {

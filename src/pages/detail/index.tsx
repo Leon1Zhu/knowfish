@@ -26,6 +26,7 @@ class DetailPage extends Component<Props, State> {
     Taro.showLoading({
       title: "数据加载中"
     });
+    Taro.request;
     API.andriod.getInfoByLatinName
       .request({
         latinName: latinName

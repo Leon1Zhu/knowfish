@@ -1,6 +1,6 @@
 import Taro, { Component, Config } from "@tarojs/taro";
 import { Provider, connect } from "@tarojs/redux";
-import { Request } from "./interceptor";
+import { Request, host } from "./interceptor";
 import Index from "./pages/index";
 import HomePage from "./pages/home/index";
 import { setUserLoginInfo } from "./actions/userAction";
@@ -102,11 +102,29 @@ class App extends Component<any, any> {
             url: `/pages/authPage/authPage?redUrl=/${redirtUrl}`
           });
         }
+
+        Taro.login({
+          success(res) {
+            if (res.code) {
+              Taro.request({
+                url: host + "/api/code2Session.do",
+                data: {
+                  jsCode: res.code
+                }
+              }).then(res => {
+                // TODO 更新用户信息
+                store.dispatch(setUserLoginInfo({ openId: res.data.openid }));
+                setTimeout(() => {
+                  this.setState;
+                }, 200);
+              });
+            } else {
+              console.log("登录失败！" + res.errMsg);
+            }
+          }
+        });
       }
     });
-
-    // TODO 更新用户信息
-    store.dispatch(setUserLoginInfo({ openId: 222 }));
   }
 
   componentDidShow() {}

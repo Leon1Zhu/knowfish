@@ -90,6 +90,10 @@ class Index extends Component<any, PageState> {
         Taro.uploadFile({
           url: host + "/api/identify.do",
           filePath: tempFilePaths[0],
+          formData: {
+            userId:
+              this.props.userReducer && this.props.userReducer.loginInfo.uninId
+          },
           name: "file",
           success: res => {
             try {
@@ -148,7 +152,7 @@ class Index extends Component<any, PageState> {
   };
 
   toScan(res) {
-    wx.navigateTo({
+    Taro.navigateTo({
       url: "/pages/camera/camera"
     });
   }

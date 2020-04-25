@@ -3,8 +3,5 @@
   "templatePath": "./pontTemplate",
   "outDir": ".//src/services",
   "surrounding": "javaScript",
-  "mocks": {
-    "enable": true
-  },
   "templateType": "fetch"
 }

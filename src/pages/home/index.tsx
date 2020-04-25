@@ -51,6 +51,8 @@ const mockRecord = [
 
 class State {
   userInfo = {} as Taro.UserInfo;
+
+  recordInfo: any[] = [];
 }
 
 @connect(({ userReducer }) => ({
@@ -73,11 +75,33 @@ class HomePage extends Component<any, State> {
   }
 
   componentDidMount() {
-    Taro.getUserInfo().then(res => {
-      console.log(res);
-      this.setState({
-        userInfo: res.userInfo
-      });
+    Taro.showLoading({
+      title: "数据加载中"
+    });
+    Taro.getUserInfo().then(userInfo => {
+      Taro.request({
+        url: host + "/api/getIdentifiedRecords.do",
+        data: {
+          userId:
+            this.props.userReducer && this.props.userReducer.loginInfo.openId
+        }
+      })
+        .then(res => {
+          Taro.hideLoading();
+          this.setState({
+            userInfo: userInfo.userInfo,
+            recordInfo: res.data
+          });
+        })
+        .catch(err => {
+          Taro.hideLoading();
+          Taro.showModal({
+            title: "小提示",
+            content: "网络错误",
+            showCancel: false,
+            success: function(res) {}
+          });
+        });
     });
   }
 
