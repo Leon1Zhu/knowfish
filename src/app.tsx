@@ -1,8 +1,9 @@
 import Taro, { Component, Config } from "@tarojs/taro";
-import { Provider } from "@tarojs/redux";
+import { Provider, connect } from "@tarojs/redux";
 import { Request } from "./interceptor";
 import Index from "./pages/index";
-import AuthPage from "./pages/AuthPage/AuthPage";
+import HomePage from "./pages/home/index";
+import { setUserLoginInfo } from "./actions/userAction";
 
 import configStore from "./store";
 
@@ -23,13 +24,15 @@ PontCore.useFetch((url, fetchOption) => {
   return Request(url, fetchOption);
 });
 
-class App extends Component {
+class App extends Component<any, any> {
   config: Config = {
     pages: [
+      "pages/home/index",
+      "pages/recordHistory/recordHistory",
       "pages/index/index",
+      "pages/detail/index",
       "pages/authPage/authPage",
       "pages/search/index",
-      "pages/detail/index",
       "pages/share/index",
       "pages/share/shareDetail",
       "pages/camera/camera"
@@ -48,20 +51,20 @@ class App extends Component {
           selectedIconPath: "image/home2.png",
           text: "首页"
         },
+        // {
+        //   pagePath: "pages/index/index",
+        //   iconPath: "image/knowledge1.png",
+        //   selectedIconPath: "image/knowledge2.png",
+        //   text: "知识"
+        // },
+        // {
+        //   pagePath: "pages/index/index",
+        //   iconPath: "image/jiaoliu1.png",
+        //   selectedIconPath: "image/jiaoliu2.png",
+        //   text: "交流"
+        // },
         {
-          pagePath: "pages/index/index",
-          iconPath: "image/knowledge1.png",
-          selectedIconPath: "image/knowledge2.png",
-          text: "知识"
-        },
-        {
-          pagePath: "pages/index/index",
-          iconPath: "image/jiaoliu1.png",
-          selectedIconPath: "image/jiaoliu2.png",
-          text: "交流"
-        },
-        {
-          pagePath: "pages/index/index",
+          pagePath: "pages/home/index",
           iconPath: "image/me1.png",
           selectedIconPath: "image/me2.png",
           text: "我的"
@@ -79,8 +82,6 @@ class App extends Component {
   componentDidMount() {
     Taro.getSetting({
       success: res => {
-        console.log(this);
-        console.log(this.$router);
         if (!res.authSetting["scope.userInfo"]) {
           let redirtUrl = this.$router.path || this.$router.params.path;
 
@@ -89,20 +90,23 @@ class App extends Component {
           (Object.keys(params) || []).map(key => {
             if (!redirtUrl.includes(`${key}=`)) {
               if (redirtUrl.indexOf("?")) {
-                redirtUrl = redirtUrl += `?key=${params[key]}`;
+                redirtUrl = redirtUrl += `?${key}=${params[key]}`;
               } else {
-                redirtUrl = redirtUrl += `&key=${params[key]}`;
+                redirtUrl = redirtUrl += `&${key}=${params[key]}`;
               }
             }
           });
 
           // 跳转授权页面
           Taro.navigateTo({
-            url: `/pages/authPage/authPage?redUrl=${redirtUrl}`
+            url: `/pages/authPage/authPage?redUrl=/${redirtUrl}`
           });
         }
       }
     });
+
+    // TODO 更新用户信息
+    store.dispatch(setUserLoginInfo({ openId: 222 }));
   }
 
   componentDidShow() {}
@@ -116,7 +120,7 @@ class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <Index />
+        <HomePage />
       </Provider>
     );
   }

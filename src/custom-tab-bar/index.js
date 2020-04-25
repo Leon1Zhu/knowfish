@@ -9,20 +9,20 @@ Component({
         selectedIconPath: "/image/home2.png",
         text: "首页"
       },
+      // {
+      //   pagePath: "/pages/index/index",
+      //   iconPath: "/image/knowledge1.png",
+      //   selectedIconPath: "/image/knowledge2.png",
+      //   text: "知识"
+      // },
+      // {
+      //   pagePath: "/pages/index/index",
+      //   iconPath: "/image/jiaoliu1.png",
+      //   selectedIconPath: "/image/jiaoliu2.png",
+      //   text: "交流"
+      // },
       {
-        pagePath: "/pages/index/index",
-        iconPath: "/image/knowledge1.png",
-        selectedIconPath: "/image/knowledge2.png",
-        text: "知识"
-      },
-      {
-        pagePath: "/pages/index/index",
-        iconPath: "/image/jiaoliu1.png",
-        selectedIconPath: "/image/jiaoliu2.png",
-        text: "交流"
-      },
-      {
-        pagePath: "/pages/index/index",
+        pagePath: "/pages/home/index",
         iconPath: "/image/me1.png",
         selectedIconPath: "/image/me2.png",
         text: "我的"

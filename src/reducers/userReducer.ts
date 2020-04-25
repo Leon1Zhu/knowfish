@@ -1,15 +1,18 @@
-import { SETSEARCHRESULT } from "../constants/counter";
+import { SETUSERLOGININFO } from "src/constants/userReducer";
 
 const INITIAL_STATE = {
-  cameraSearchResult: []
+  loginInfo: {
+    openId: 111,
+    uninId: 111
+  }
 };
 
 export default function reducer(state = INITIAL_STATE, action) {
   switch (action.type) {
-    case SETSEARCHRESULT:
+    case SETUSERLOGININFO:
       return {
         ...state,
-        cameraSearchResult: action.data
+        loginInfo: action.data
       };
     default:
       return state;

@@ -89,7 +89,7 @@ import "./camera.less";
           url: host + "/api/identify.do",
           filePath: res.tempImagePath,
           name: "file",
-          success: function(res) {
+          success: res => {
             console.log(res);
             try {
               var code = JSON.parse(res.data).code;
@@ -150,7 +150,7 @@ import "./camera.less";
     });
   },
 
-  chooseimage: function() {
+  chooseimage: () => {
     var that = this;
     Taro.chooseImage({
       count: 1, // 默认9
@@ -168,7 +168,7 @@ import "./camera.less";
           url: host + "/api/identify.do",
           filePath: tempFilePaths[0],
           name: "file",
-          success: function(res) {
+          success: res => {
             console.log(res);
             try {
               var code = JSON.parse(res.data).code;

@@ -84,4 +84,4 @@ class SearchList extends Component<any, State> {
   }
 }
 
-export default SearchList as ComponentClass<Props & PageStateProps, State>;
+export default SearchList as ComponentClass<Props, State>;

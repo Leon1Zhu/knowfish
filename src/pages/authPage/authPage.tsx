@@ -10,6 +10,8 @@ class AuthPage extends Component {
   getUserInfo = () => {
     const redUrl = this.$router.params.redUrl;
 
+    console.log(redUrl);
+
     if (redUrl) {
       Taro.navigateTo({
         url: redUrl

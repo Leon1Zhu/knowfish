@@ -82,19 +82,16 @@ class Index extends Component<any, PageState> {
       sizeType: ["compressed"], // 指定是原图或压缩图，默认二者都有 original,compressed
       sourceType: ["album"], // 可以指定来源是相册还是相机，默认二者都有
       success: res => {
-        var that1 = that;
-
         // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
         var tempFilePaths = res.tempFilePaths;
         Taro.showLoading({
           title: "识别中"
         });
-        console.log(tempFilePaths[0]);
         Taro.uploadFile({
           url: host + "/api/identify.do",
           filePath: tempFilePaths[0],
           name: "file",
-          success: function(res) {
+          success: res => {
             try {
               var code = JSON.parse(res.data).code;
             } catch (e) {
