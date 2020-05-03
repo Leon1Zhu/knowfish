@@ -23,17 +23,6 @@ class SharePicturePage extends Component<any, State> {
   qqmapsdk;
 
   componentDidShow() {
-    if (
-      typeof this.$scope.getTabBar === "function" &&
-      this.$scope.getTabBar()
-    ) {
-      this.$scope.getTabBar().setData({
-        selected: 1
-      });
-    }
-  }
-
-  componentDidMount() {
     Taro.showLoading({
       title: "加载中"
     });

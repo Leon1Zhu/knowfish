@@ -22,7 +22,6 @@ class ShareDetailPage extends Component<any, State> {
   };
 
   componentDidMount() {
-    console.log(this.$router);
     const latinName = this.$router.params.latinName;
     Taro.showLoading({
       title: "加载中"

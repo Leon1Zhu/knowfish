@@ -1,57 +1,14 @@
 import { Component, ComponentClass } from "@tarojs/taro";
 import { View, CoverImage } from "@tarojs/components";
 import { connect } from "@tarojs/redux";
-import RecordCard from "../commons/recordCard";
 import "./recordHistory.less";
 import { host } from "src/interceptor";
-import { previewImage } from "../utils";
+import { previewImage, tsFormatTime } from "../utils";
+import EmptyContent from "../commons/emptyContent";
 
 class State {
   recordInfo: any[] = [];
 }
-
-const mockRecord = [
-  {
-    smallImage: "/images/a0134.jpg",
-    fig1: "/images/fig/fish/ff0133a.jpg",
-    date: "2020-01-02"
-  },
-  {
-    smallImage: "/images/a0134.jpg",
-    fig1: "/images/fig/fish/ff0133a.jpg",
-    date: "2020-01-02"
-  },
-  {
-    smallImage: "/images/a0134.jpg",
-    fig1: "/images/fig/fish/ff0133a.jpg",
-    date: "2020-01-02"
-  },
-  {
-    smallImage: "/images/a0134.jpg",
-    fig1: "/images/fig/fish/ff0133a.jpg",
-    date: "2020-01-02"
-  },
-  {
-    smallImage: "/images/a0134.jpg",
-    fig1: "/images/fig/fish/ff0133a.jpg",
-    date: "2020-01-02"
-  },
-  {
-    smallImage: "/images/a0134.jpg",
-    fig1: "/images/fig/fish/ff0133a.jpg",
-    date: "2020-01-02"
-  },
-  {
-    smallImage: "/images/a0134.jpg",
-    fig1: "/images/fig/fish/ff0133a.jpg",
-    date: "2020-01-02"
-  },
-  {
-    smallImage: "/images/a0134.jpg",
-    fig1: "/images/fig/fish/ff0133a.jpg",
-    date: "2020-01-02"
-  }
-];
 
 @connect(({ userReducer }) => ({
   userReducer
@@ -68,7 +25,7 @@ class RecordHistory extends Component<any, State> {
       .then(res => {
         Taro.hideLoading();
         this.setState({
-          recordInfo: res.data
+          recordInfo: res.data.data
         });
       })
       .catch(err => {
@@ -76,29 +33,35 @@ class RecordHistory extends Component<any, State> {
         Taro.showModal({
           title: "小提示",
           content: "网络错误",
-          showCancel: false,
-          success: function(res) {}
+          showCancel: false
         });
       });
   }
 
   render() {
+    const { recordInfo } = this.state;
     return (
       <View className="record-history-page">
-        {mockRecord.map(record => {
-          return (
-            <View className="record-content">
-              <CoverImage
-                className="cover-iamge"
-                src={`${host}${record.smallImage}`}
-                onClick={() => {
-                  previewImage([record.fig1]);
-                }}
-              ></CoverImage>
-              <View className="revord-date">{record.date}</View>
-            </View>
-          );
-        })}
+        {recordInfo && recordInfo.length > 0 ? (
+          recordInfo.map(record => {
+            return (
+              <View className="record-content">
+                <CoverImage
+                  className="cover-iamge"
+                  src={`${host}${record.smallImageLink}`}
+                  onClick={() => {
+                    previewImage([record.uploadedImageLink]);
+                  }}
+                ></CoverImage>
+                <View className="revord-date">
+                  {tsFormatTime(record.createTime, "Y-M-D")}
+                </View>
+              </View>
+            );
+          })
+        ) : (
+          <EmptyContent content="暂无数据"></EmptyContent>
+        )}
       </View>
     );
   }

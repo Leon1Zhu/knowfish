@@ -1,53 +1,11 @@
-import "./index.less";
 import Taro, { Component, ComponentClass, Config } from "@tarojs/taro";
 import { View, ScrollView, CoverImage, Text } from "@tarojs/components";
 import PageNativeComponent from "../commons/pageNativeComponent";
 import { connect } from "@tarojs/redux";
 import { host } from "src/interceptor";
-import { previewImage } from "../utils";
-
-const mockRecord = [
-  {
-    smallImage: "/images/a0134.jpg",
-    fig1: "/images/fig/fish/ff0133a.jpg",
-    date: "2020-01-02"
-  },
-  {
-    smallImage: "/images/a0134.jpg",
-    fig1: "/images/fig/fish/ff0133a.jpg",
-    date: "2020-01-02"
-  },
-  {
-    smallImage: "/images/a0134.jpg",
-    fig1: "/images/fig/fish/ff0133a.jpg",
-    date: "2020-01-02"
-  },
-  {
-    smallImage: "/images/a0134.jpg",
-    fig1: "/images/fig/fish/ff0133a.jpg",
-    date: "2020-01-02"
-  },
-  {
-    smallImage: "/images/a0134.jpg",
-    fig1: "/images/fig/fish/ff0133a.jpg",
-    date: "2020-01-02"
-  },
-  {
-    smallImage: "/images/a0134.jpg",
-    fig1: "/images/fig/fish/ff0133a.jpg",
-    date: "2020-01-02"
-  },
-  {
-    smallImage: "/images/a0134.jpg",
-    fig1: "/images/fig/fish/ff0133a.jpg",
-    date: "2020-01-02"
-  },
-  {
-    smallImage: "/images/a0134.jpg",
-    fig1: "/images/fig/fish/ff0133a.jpg",
-    date: "2020-01-02"
-  }
-];
+import { previewImage, tsFormatTime } from "../utils";
+import EmptyContent from "../commons/emptyContent";
+import "./index.less";
 
 class State {
   userInfo = {} as Taro.UserInfo;
@@ -63,49 +21,73 @@ class HomePage extends Component<any, State> {
     navigationBarTitleText: "我的"
   };
 
+  timmer;
+
   componentDidShow() {
     if (
       typeof this.$scope.getTabBar === "function" &&
       this.$scope.getTabBar()
     ) {
       this.$scope.getTabBar().setData({
-        selected: 1
+        selected: 2
       });
+    }
+
+    if (this.props.userReducer.loginInfo.openId) {
+      this.getRecordData(this.props.userReducer.loginInfo.openId);
     }
   }
 
   componentDidMount() {
+    Taro.getUserInfo().then(userInfo => {
+      this.setState({
+        userInfo: userInfo.userInfo
+      });
+    });
+
+    this.timmer = setInterval(() => {
+      if (this.props.userReducer.loginInfo.openId) {
+        this.getRecordData(this.props.userReducer.loginInfo.openId);
+
+        clearInterval(this.timmer);
+      }
+    }, 500);
+  }
+
+  toMyCommunicationPage = () => {
+    wx.switchTab({ url: "/pages/communication/index?isMyArticle=true" });
+  };
+
+  getRecordData = (openId: string) => {
     Taro.showLoading({
       title: "数据加载中"
     });
-    Taro.getUserInfo().then(userInfo => {
-      Taro.request({
-        url: host + "/api/getIdentifiedRecords.do",
-        data: {
-          userId:
-            this.props.userReducer && this.props.userReducer.loginInfo.openId
-        }
-      })
-        .then(res => {
-          Taro.hideLoading();
-          this.setState({
-            userInfo: userInfo.userInfo,
-            recordInfo: res.data
-          });
-        })
-        .catch(err => {
-          Taro.hideLoading();
-          Taro.showModal({
-            title: "小提示",
-            content: "网络错误",
-            showCancel: false,
-            success: function(res) {}
-          });
+
+    Taro.request({
+      url: host + "/api/getIdentifiedRecords.do",
+      data: {
+        userId: openId
+      }
+    })
+      .then(res => {
+        Taro.hideLoading();
+        this.setState({
+          recordInfo: res.data.data
         });
-    });
-  }
+      })
+      .catch(err => {
+        Taro.hideLoading();
+        Taro.showModal({
+          title: "小提示",
+          content: "网络错误",
+          showCancel: false
+        });
+      });
+  };
 
   renderMyRevcord() {
+    const { recordInfo } = this.state;
+
     return (
       <View className="my-record">
         <View className="title">
@@ -122,20 +104,31 @@ class HomePage extends Component<any, State> {
           </View>
         </View>
         <ScrollView className="scrollview" scrollX style="width: 100%">
-          {mockRecord.map(record => {
-            return (
-              <View className="record-content">
-                <CoverImage
-                  className="cover-iamge"
-                  src={`${host}${record.smallImage}`}
-                  onClick={() => {
-                    previewImage([record.fig1]);
-                  }}
-                ></CoverImage>
-                <View className="revord-date">{record.date}</View>
-              </View>
-            );
-          })}
+          {recordInfo && recordInfo.length > 0 ? (
+            recordInfo.map(record => {
+              return (
+                <View key={record.id} className="record-content">
+                  <CoverImage
+                    className="cover-iamge"
+                    src={`${host}${record.smallImageLink.replace(
+                      "/fishing",
+                      ""
+                    )}`}
+                    onClick={() => {
+                      previewImage([
+                        record.uploadedImageLink.replace("/fishing", "")
+                      ]);
+                    }}
+                  ></CoverImage>
+                  <View className="revord-date">
+                    {tsFormatTime(record.createTime, "Y-M-D")}
+                  </View>
+                </View>
+              );
+            })
+          ) : (
+            <EmptyContent content="暂无数据"></EmptyContent>
+          )}
         </ScrollView>
       </View>
     );
@@ -155,6 +148,7 @@ class HomePage extends Component<any, State> {
         <PageNativeComponent
           className="my-discussion"
           title="我的交流"
+          onClick={this.toMyCommunicationPage}
         ></PageNativeComponent>
         {this.renderMyRevcord()}
         <PageNativeComponent

@@ -6,15 +6,18 @@ import { setSearchResult } from "../../actions/searchActions";
 
 import "./index.less";
 import { host } from "src/interceptor";
-import { getMonthAndDay } from "../utils";
+import { getMonthAndDay, errorHandle } from "../utils";
 
 class PageState {
   dailyGuessData = {} as any;
+
+  randomInfo: any = {};
 }
 
 @connect(
-  ({ searchResultReducer }) => ({
-    searchResultReducer
+  ({ searchResultReducer, userReducer }) => ({
+    searchResultReducer,
+    userReducer
   }),
   dispatch => ({
     setResult(data) {
@@ -38,22 +41,44 @@ class Index extends Component<any, PageState> {
         selected: 0
       });
     }
+
+    this.getRandomData();
   }
+
+  getRandomData = () => {
+    Taro.showLoading({
+      title: "数据加载中"
+    });
+
+    Taro.request({
+      url: host + "/api/getRandomInfo.do"
+    })
+      .then(res => {
+        console.log(res);
+        Taro.hideLoading();
+        this.setState({
+          randomInfo: res.data.data
+        });
+      })
+      .catch(error => {
+        errorHandle();
+      });
+  };
 
   componentDidMount() {}
 
-  getDailyGuess() {}
-
   goToShare = () => {
-    const { dailyGuessData } = this.state;
+    const { randomInfo } = this.state;
+
     // TODO 拉丁名动态替换
     Taro.navigateTo({
-      url: `/pages/share/index?latinName=Mola_mola`
+      url: `/pages/share/index?latinName=${randomInfo.latinName}`
     });
   };
 
   renderDayGuessContent() {
-    // TODO icon更新
+    const { randomInfo } = this.state;
+
     return (
       <View className="day-guess-content">
         <View className="guess-day-info">{getMonthAndDay()}</View>
@@ -63,20 +88,17 @@ class Index extends Component<any, PageState> {
         ></View>
         <CoverImage
           className="day-guess-img"
-          src={`${host}/images/a0067.jpg`}
+          src={`${host}${randomInfo.smallImage}`}
         ></CoverImage>
-        <View className="day-guess-text">每日一猜·这是什么鱼?</View>
-        <ul className="day-guess-answer-list">
-          <li className="day-guess-answer-item">金鱼</li>
-          <li className="day-guess-answer-item">金鱼</li>
-          <li className="day-guess-answer-item">小丑鱼</li>
-        </ul>
+        <View className="day-guess-text">每日新知·{randomInfo.name}</View>
+        <View className="day-guess-answer-list">
+          {randomInfo.livingHabit ? randomInfo.livingHabit : "暂无"}
+        </View>
       </View>
     );
   }
 
   chooseimage = () => {
-    var that = this;
     Taro.chooseImage({
       count: 1, // 默认9
       sizeType: ["compressed"], // 指定是原图或压缩图，默认二者都有 original,compressed
@@ -87,12 +109,13 @@ class Index extends Component<any, PageState> {
         Taro.showLoading({
           title: "识别中"
         });
+
         Taro.uploadFile({
           url: host + "/api/identify.do",
           filePath: tempFilePaths[0],
           formData: {
             userId:
-              this.props.userReducer && this.props.userReducer.loginInfo.uninId
+              this.props.userReducer && this.props.userReducer.loginInfo.openId
           },
           name: "file",
           success: res => {

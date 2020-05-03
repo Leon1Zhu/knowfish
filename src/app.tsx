@@ -2,7 +2,7 @@ import Taro, { Component, Config } from "@tarojs/taro";
 import { Provider, connect } from "@tarojs/redux";
 import { Request, host } from "./interceptor";
 import Index from "./pages/index";
-import HomePage from "./pages/home/index";
+import Communication from "./pages/communication/index";
 import { setUserLoginInfo } from "./actions/userAction";
 
 import configStore from "./store";
@@ -24,12 +24,18 @@ PontCore.useFetch((url, fetchOption) => {
   return Request(url, fetchOption);
 });
 
-class App extends Component<any, any> {
+class State {
+  loading = true;
+}
+
+class App extends Component<any, State> {
   config: Config = {
     pages: [
+      "pages/communication/index",
+      "pages/addCommunicate/addCommunicate",
+      "pages/index/index",
       "pages/home/index",
       "pages/recordHistory/recordHistory",
-      "pages/index/index",
       "pages/detail/index",
       "pages/authPage/authPage",
       "pages/search/index",
@@ -57,12 +63,12 @@ class App extends Component<any, any> {
         //   selectedIconPath: "image/knowledge2.png",
         //   text: "知识"
         // },
-        // {
-        //   pagePath: "pages/index/index",
-        //   iconPath: "image/jiaoliu1.png",
-        //   selectedIconPath: "image/jiaoliu2.png",
-        //   text: "交流"
-        // },
+        {
+          pagePath: "pages/communication/index",
+          iconPath: "image/jiaoliu1.png",
+          selectedIconPath: "image/jiaoliu2.png",
+          text: "交流"
+        },
         {
           pagePath: "pages/home/index",
           iconPath: "image/me1.png",
@@ -79,7 +85,16 @@ class App extends Component<any, any> {
     }
   };
 
+  state = new State();
+
   componentDidMount() {
+    const { loading } = this.state;
+
+    if (loading) {
+      Taro.showLoading({
+        title: "用户信息加载中"
+      });
+    }
     Taro.getSetting({
       success: res => {
         if (!res.authSetting["scope.userInfo"]) {
@@ -97,6 +112,11 @@ class App extends Component<any, any> {
             }
           });
 
+          this.setState({
+            loading: false
+          });
+          Taro.hideLoading();
+
           // 跳转授权页面
           Taro.navigateTo({
             url: `/pages/authPage/authPage?redUrl=/${redirtUrl}`
@@ -104,7 +124,7 @@ class App extends Component<any, any> {
         }
 
         Taro.login({
-          success(res) {
+          success: res => {
             if (res.code) {
               Taro.request({
                 url: host + "/api/code2Session.do",
@@ -113,32 +133,33 @@ class App extends Component<any, any> {
                 }
               }).then(res => {
                 // TODO 更新用户信息
-                store.dispatch(setUserLoginInfo({ openId: res.data.openid }));
-                setTimeout(() => {
-                  this.setState;
-                }, 200);
+                store.dispatch(
+                  setUserLoginInfo({ openId: res.data.data.openid })
+                );
+                this.setState({
+                  loading: false
+                });
+                Taro.hideLoading();
               });
             } else {
+              Taro.hideLoading();
               console.log("登录失败！" + res.errMsg);
             }
+          },
+          fail(res) {
+            Taro.hideLoading();
           }
         });
       }
     });
   }
 
-  componentDidShow() {}
-
-  componentDidHide() {}
-
-  componentDidCatchError() {}
-
   // 在 App 类中的 render() 函数没有实际作用
   // 请勿修改此函数
   render() {
     return (
       <Provider store={store}>
-        <HomePage />
+        <Communication />
       </Provider>
     );
   }

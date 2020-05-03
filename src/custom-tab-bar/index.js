@@ -15,12 +15,12 @@ Component({
       //   selectedIconPath: "/image/knowledge2.png",
       //   text: "知识"
       // },
-      // {
-      //   pagePath: "/pages/index/index",
-      //   iconPath: "/image/jiaoliu1.png",
-      //   selectedIconPath: "/image/jiaoliu2.png",
-      //   text: "交流"
-      // },
+      {
+        pagePath: "/pages/communication/index",
+        iconPath: "/image/jiaoliu1.png",
+        selectedIconPath: "/image/jiaoliu2.png",
+        text: "交流"
+      },
       {
         pagePath: "/pages/home/index",
         iconPath: "/image/me1.png",

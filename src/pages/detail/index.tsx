@@ -3,6 +3,7 @@ import { Component, ComponentClass } from "@tarojs/taro";
 import { View, CoverImage, CoverView, Button } from "@tarojs/components";
 import API from "src/services/mods";
 import { host } from "src/interceptor";
+import { previewImage } from "../utils";
 
 class Props {
   latinName = "";
@@ -59,6 +60,25 @@ class DetailPage extends Component<Props, State> {
     });
   }
 
+  preview_figImage(data) {
+    if (
+      (data.fig1 && data.fig1 !== "暂缺") ||
+      (data.fig2 && data.fig2 !== "暂缺")
+    ) {
+      const imgs = [] as any[];
+
+      if (data.fig1 && data.fig1 !== "暂缺") {
+        imgs.push(data.fig1);
+      }
+
+      if (data.fig2 && data.fig2 !== "暂缺") {
+        imgs.push(data.fig2);
+      }
+
+      previewImage(imgs as string[]);
+    }
+  }
+
   render() {
     const { data } = this.state;
     return (
@@ -84,6 +104,31 @@ class DetailPage extends Component<Props, State> {
           {this.renderFishInfo("识别特征", data.feature)}
           {this.renderFishInfo("生活习性", data.livingHabit)}
           {this.renderFishInfo("地理分布", data.area)}
+
+          <View className="info-item">
+            <View className="info-title">参考图</View>
+            <View className="info-content">
+              {data.fig1 && (
+                <View
+                  className="img-url-content"
+                  onClick={this.preview_figImage.bind(this, data)}
+                  style={data.fig1 != "暂缺" ? { color: "#1488f5" } : ""}
+                >
+                  {data.fig1 != "暂缺" ? "参考图1" : "暂缺"}
+                </View>
+              )}
+              {data.fig2 && data.fig2 != "暂缺" && (
+                <View
+                  className="img-url-content"
+                  onClick={this.preview_figImage.bind(this, data)}
+                  style={data.fig2 != "暂缺" ? { color: "#1488f5" } : ""}
+                >
+                  ，参考图2
+                </View>
+              )}
+            </View>
+          </View>
+
           <View className="info-source">
             <View className="info-source-icon">*</View> 资料来源
             {data.informationSource}

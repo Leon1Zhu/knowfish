@@ -2,8 +2,8 @@ import { SETUSERLOGININFO } from "src/constants/userReducer";
 
 const INITIAL_STATE = {
   loginInfo: {
-    openId: 111,
-    uninId: 111
+    openId: "",
+    uninId: ""
   }
 };
 
