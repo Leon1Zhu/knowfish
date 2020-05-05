@@ -152,8 +152,9 @@ class Communication extends Component<Props, State> {
   }
 
   renderCommunicateItem(article: any) {
-    const isModifyUser =
-      article.user.userId === this.props.userReducer.loginInfo.openId;
+    const { userReducer } = this.props;
+
+    const isModifyUser = article.user.userId === userReducer.loginInfo.openId;
     return (
       <View className="article-item">
         {isModifyUser && (

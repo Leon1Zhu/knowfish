@@ -31,11 +31,11 @@ class State {
 class App extends Component<any, State> {
   config: Config = {
     pages: [
+      "pages/index/index",
       "pages/communication/index",
       "pages/knowledge/knowledge",
       "pages/sourceOrigin/sourceOrigin",
       "pages/addCommunicate/addCommunicate",
-      "pages/index/index",
       "pages/home/index",
       "pages/recordHistory/recordHistory",
       "pages/detail/index",
