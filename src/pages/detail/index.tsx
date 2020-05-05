@@ -1,6 +1,6 @@
 import "./index.less";
 import { Component, ComponentClass } from "@tarojs/taro";
-import { View, CoverImage, CoverView, Button } from "@tarojs/components";
+import { View, CoverImage, CoverView, Button, Image } from "@tarojs/components";
 import API from "src/services/mods";
 import { host } from "src/interceptor";
 import { previewImage } from "../utils";
@@ -88,10 +88,7 @@ class DetailPage extends Component<Props, State> {
           onClick={this.handleGoToSharePage}
         ></View>
         <CoverView className="image-content">
-          <CoverImage
-            className="card-img"
-            src={`${host}${data.smallImage}`}
-          ></CoverImage>
+          <Image className="card-img" src={`${host}${data.smallImage}`}></Image>
         </CoverView>
 
         <View className="detail-info">

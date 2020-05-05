@@ -1,4 +1,4 @@
-import { host } from "src/interceptor";
+import { host, imgHost } from "src/interceptor";
 import Taro from "@tarojs/taro";
 
 export function getMonthAndDay() {
@@ -15,8 +15,8 @@ export function getMonthAndDay() {
 
 export function previewImage(urls: string[] = []) {
   const newUrls = urls.map(url => {
-    if (!url.includes(host)) {
-      return host + url;
+    if (!url.includes(host) || !url.includes("http")) {
+      return (url.includes("/fishing") ? imgHost : host) + url;
     }
 
     return url;
@@ -77,7 +77,6 @@ export function timeago(dateTimeStamp) {
   const halfamonth = day * 15;
   const month = day * 30;
   const now = new Date().getTime(); //获取当前时间毫秒
-  console.log(now);
   const diffValue = now - dateTimeStamp; //时间差
 
   let result = "";

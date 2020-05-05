@@ -16,7 +16,7 @@ export function setPictureBycreateCanvasContext(
 ) {
   const ctx = Taro.createCanvasContext("share-canvas");
   ctx.fillStyle = "#ffffff";
-  ctx.fillRect(0, 0, 325, 560);
+  ctx.fillRect(0, 0, 325, 660);
   ctx.fill();
 
   ctx.beginPath();
@@ -25,7 +25,7 @@ export function setPictureBycreateCanvasContext(
 
   setLines(ctx, fishInfo);
 
-  circleImg(ctx, data[1].path, 240, 470, 40);
+  circleImg(ctx, data[1].path, 240, 570, 40);
 
   // 绘制底部
   getLocationInfo(ctx, data[2], qqmapsdk);
@@ -125,12 +125,12 @@ function setFootContent(
   userInfo: Taro.getUserInfo.SuccessCallbackResult,
   ctx: Taro.CanvasContext
 ) {
-  circleImg(ctx, _.get(userInfo, "userInfo.avatarUrl", ""), 20, 500, 25);
+  circleImg(ctx, _.get(userInfo, "userInfo.avatarUrl", ""), 20, 600, 25);
   ctx.beginPath();
   ctx.setFontSize(10);
   ctx.setFillStyle("rgba(0,0,0,0.4)");
-  ctx.fillText(userText, 74, 517);
-  ctx.fillText("鱼乐渔趣 | 长按小程序拍照识鱼", 74, 537);
+  ctx.fillText(userText, 74, 617);
+  ctx.fillText("鱼乐渔趣 | 长按小程序拍照识鱼", 74, 637);
 
   ctx.stroke();
   ctx.draw();

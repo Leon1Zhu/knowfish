@@ -8,6 +8,7 @@ class Props {
   className = "";
   children?;
   onClick?;
+  showArrow? = true;
 }
 
 class State {}
@@ -16,7 +17,7 @@ class PageNativeComponent extends Component<Props, State> {
   defaultProps = new Props();
 
   render() {
-    const { title, className, children, onClick } = this.props;
+    const { title, className, children, onClick, showArrow } = this.props;
     return (
       <View
         className={`page-native-component ${className}`}
@@ -26,7 +27,7 @@ class PageNativeComponent extends Component<Props, State> {
       >
         <View className="title-content">
           <View className="title">{title}</View>
-          <View className="iconfont iconarrow"></View>
+          {showArrow && <View className="iconfont iconarrow"></View>}
         </View>
         {children}
       </View>

@@ -1,5 +1,5 @@
 import { Component, ComponentClass } from "@tarojs/taro";
-import { View, CoverImage } from "@tarojs/components";
+import { View, CoverImage, Image } from "@tarojs/components";
 import { host } from "src/interceptor";
 import { previewImage } from "../utils";
 
@@ -15,13 +15,13 @@ class RecordCard extends Component<Props, any> {
 
     return (
       <View className="record-content">
-        <CoverImage
+        <Image
           className="cover-iamge"
           src={`${host}${record.smallImage}`}
           onClick={() => {
             previewImage([record.fig1]);
           }}
-        ></CoverImage>
+        ></Image>
         <View className="revord-date">{record.date}</View>
       </View>
     );

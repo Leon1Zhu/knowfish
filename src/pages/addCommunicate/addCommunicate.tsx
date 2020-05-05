@@ -1,17 +1,15 @@
 import { Component, ComponentClass, Config } from "@tarojs/taro";
-import { View, CoverImage, Textarea, Button } from "@tarojs/components";
+import { View, CoverImage, Textarea, Button, Image } from "@tarojs/components";
 import "./addCommunicate.less";
 import { host } from "src/interceptor";
 import { connect } from "@tarojs/redux";
 
-class Props {
-}
+class Props {}
 
 class State {
-
   addPicArrs = [] as any[];
 
-  value = '';
+  value = "";
 
   userInfo;
 }
@@ -20,17 +18,14 @@ class State {
   userReducer
 }))
 class AddCommunicate extends Component<any, State> {
-
   config: Config = {
-    navigationBarTitleText: "添加";
+    navigationBarTitleText: "添加"
   };
 
   state = new State();
 
   componentDidMount() {
-    console.log(1)
     Taro.getUserInfo().then(userInfo => {
-      console.log(2)
       this.setState({
         userInfo: userInfo.userInfo
       });
@@ -38,7 +33,6 @@ class AddCommunicate extends Component<any, State> {
   }
 
   handleAddPic = () => {
-
     Taro.chooseImage({
       count: 1, // 默认9
       sizeType: ["compressed"], // 指定是原图或压缩图，默认二者都有 original,compressed
@@ -46,71 +40,48 @@ class AddCommunicate extends Component<any, State> {
       success: res => {
         // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
         var tempFilePaths = res.tempFilePaths;
-        this.setState({
-          addPicArrs: tempFilePaths
-        })
+        setTimeout(() => {
+          this.setState({
+            addPicArrs: tempFilePaths
+          });
+        }, 0);
+      }
+    });
+  };
+
+  handlePublish = () => {
+    const { addPicArrs, value, userInfo } = this.state;
+
+    console.log({
+      articleContent: value,
+      user: {
+        userId: this.props.userReducer.loginInfo.openId,
+        userName: userInfo.nickName,
+        userIconUrl: userInfo.avatarUrl
       }
     });
 
-  }
-  
-  handlePublish = () => {
-    const { addPicArrs, value, userInfo } = this.state;
     Taro.uploadFile({
       url: host + "/api/addArticle.do",
       filePath: addPicArrs[0],
+      header: {
+        "content-type": "application/x-www-form-urlencoded" //修改此处即可
+      },
       formData: {
-        articleJson:
-          {
-            articleContent: value,
-            user: {
-              userId: this.props.userReducer.loginInfo.openId,
-              userName: userInfo.nickName
-            }
+        articleJson: JSON.stringify({
+          articleContent: value,
+          user: {
+            userId: this.props.userReducer.loginInfo.openId,
+            userName: userInfo.nickName,
+            userIconUrl: userInfo.avatarUrl
           }
+        })
       },
       name: "file",
       success: res => {
-        try {
-          var code = JSON.parse(res.data).code;
-        } catch (e) {
-          Taro.showModal({
-            title: "小提示",
-            content: "网络错误",
-            showCancel: false
-          });
-        }
-        if (code == 1) {
-          Taro.showModal({
-            title: "小提示",
-            content: "抱歉,我们暂不能识别该生物,谢谢您的使用",
-            showCancel: false
-          });
-        }
-        if (code == 0) {
-          var outcome = JSON.parse(res.data).data;
-          var ids = [];
-          for (var i = 0; i < outcome.length; i++) {
-            if (outcome[i].id >= 0 && outcome[i].id <= 9999999) {
-              ids.push(outcome[i].id as never);
-            }
-          }
-          if (ids.length == 0) {
-            Taro.showModal({
-              title: "小提示",
-              content: "抱歉,我们暂不能识别该生物,谢谢您的使用",
-              showCancel: false
-            });
-          }
-
-          Taro.navigateTo({
-            url: `/pages/detail/index?latinName=${outcome[0] &&
-              outcome[0].latinName}`
-          });
-        }
+        wx.switchTab({ url: "/pages/communication/index" });
       },
       fail: function(res) {
-        console.log("failed to result");
         Taro.showToast({
           title: "网络错误",
           icon: "loading",
@@ -121,21 +92,49 @@ class AddCommunicate extends Component<any, State> {
         Taro.hideLoading();
       }
     });
-  }
+  };
 
   render() {
-
     const { addPicArrs, value } = this.state;
+    const disabled = !value || addPicArrs.length < 1;
 
-    return <View className="add-communicate-page">
-      <Textarea value={value} onInput={(e) => {this.setState({
-        value: e.detail.value
-      })}} className="add-input" placeholder="描述下想和大家交流的鱼，和大家一起分享有趣的小鱼故事哦" placeholderClass="input-plac-class" />
-      {addPicArrs && addPicArrs.length < 1 ? <View className="iconfont iconarrow" onClick={this.handleAddPic}></View> : <CoverImage className="upload-img" src={addPicArrs[0]} onClick={this.handleAddPic}></CoverImage>} 
-      <View className="publlish-content">
-      <Button className="publish" disabled={!value || addPicArrs.length < 1} onClick={this.handlePublish}>确认发布</Button>
+    return (
+      <View className="add-communicate-page">
+        <Textarea
+          value={value}
+          onInput={e => {
+            this.setState({
+              value: e.detail.value
+            });
+          }}
+          className="add-input"
+          placeholder="描述下想和大家交流的鱼，和大家一起分享有趣的小鱼故事哦"
+          placeholderClass="input-plac-class"
+        />
+        {addPicArrs && addPicArrs.length < 1 ? (
+          <Image
+            className="add-jpg"
+            src={require("../../image/add.jpg")}
+            onClick={this.handleAddPic}
+          ></Image>
+        ) : (
+          <Image
+            className="upload-img"
+            src={addPicArrs[0]}
+            onClick={this.handleAddPic}
+          ></Image>
+        )}
+        <View className="publlish-content">
+          <Button
+            className="publish"
+            disabled={disabled}
+            onClick={this.handlePublish}
+          >
+            确认发布
+          </Button>
+        </View>
       </View>
-    </View>;
+    );
   }
 }
 

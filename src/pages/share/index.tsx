@@ -100,7 +100,7 @@ class SharePicturePage extends Component<any, State> {
         <canvas
           id="share-canvas"
           canvas-id="share-canvas"
-          style="width:325px;height:560px"
+          style="width:325px;height:660px"
         ></canvas>
 
         <View className="share-btns">

@@ -5,6 +5,8 @@ import SearchList from "../commons/searchList";
 import "./index.less";
 import API from "src/services/mods";
 import { connect } from "@tarojs/redux";
+import EmptyContent from "../commons/emptyContent";
+
 const searchList = [
   { name: "鲤鱼", latinname: "Cyprinus" },
   { name: "鲈鱼", latinname: "Lateolabrax_japonicus" },
@@ -22,6 +24,8 @@ type PageStateProps = {
 
 class State {
   searchData: any[];
+
+  searchKey = "";
 }
 @connect(({ searchResultReducer }) => {
   return {
@@ -68,6 +72,10 @@ class SearchPage extends Component<PageStateProps, State> {
 
   handleInput(e) {
     const searchValue = e.detail.value;
+
+    this.setState({
+      searchKey: searchValue
+    });
     Taro.showLoading({
       title: "搜索中"
     });
@@ -91,7 +99,7 @@ class SearchPage extends Component<PageStateProps, State> {
   };
 
   render() {
-    const { searchData } = this.state;
+    const { searchData, searchKey } = this.state;
 
     return (
       <View className="search-page">
@@ -106,7 +114,7 @@ class SearchPage extends Component<PageStateProps, State> {
           <View onClick={this.toScan} className="iconfont iconcamera"></View>
         </View>
 
-        {searchData && searchData.length < 1 && (
+        {searchData && searchData.length < 1 && !searchKey ? (
           <View className="person-serarch-list">
             <View className="person-search-text">大家都在搜</View>
             <View className="list-content">
@@ -123,6 +131,8 @@ class SearchPage extends Component<PageStateProps, State> {
               })}
             </View>
           </View>
+        ) : (
+          !!searchKey && <EmptyContent content="暂无数据"></EmptyContent>
         )}
 
         {searchData && searchData.length > 0 && (

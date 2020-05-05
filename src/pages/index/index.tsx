@@ -41,8 +41,6 @@ class Index extends Component<any, PageState> {
         selected: 0
       });
     }
-
-    this.getRandomData();
   }
 
   getRandomData = () => {
@@ -65,7 +63,9 @@ class Index extends Component<any, PageState> {
       });
   };
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.getRandomData();
+  }
 
   goToShare = () => {
     const { randomInfo } = this.state;

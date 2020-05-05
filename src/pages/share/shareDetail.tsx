@@ -4,7 +4,7 @@
  */
 
 import { Component, ComponentClass, Config } from "@tarojs/taro";
-import { View, Button, CoverView, CoverImage } from "@tarojs/components";
+import { View, Button, CoverView, CoverImage, Image } from "@tarojs/components";
 import API from "src/services/mods";
 
 import "./shareDetail.less";
@@ -56,13 +56,13 @@ class ShareDetailPage extends Component<any, State> {
     const { userInfo, fishData } = this.state;
     return (
       <View className="share-detail">
-        <View className="fish-name">孝顺竹</View>
+        <View className="fish-name">{fishData.name}</View>
         <CoverView className="play">
-          <CoverImage className="img" src={`${host}${fishData.smallImage}`} />
+          <Image className="img" src={`${host}${fishData.smallImage}`} />
         </CoverView>
         <View className="user-info">
           <CoverView className="user-head left-content">
-            <CoverImage className="head" src={`${userInfo.avatarUrl}`} />
+            <Image className="head" src={`${userInfo.avatarUrl}`} />
             <CoverView className="user-name">{userInfo.nickName}</CoverView>
           </CoverView>
 

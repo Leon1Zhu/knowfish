@@ -6,6 +6,8 @@ import Taro from "@tarojs/taro";
 
 const fly = new Fly();
 export const host = "https://knowfish.scsfri.ac.cn/fishing";
+
+export const imgHost = "https://knowfish.scsfri.ac.cn";
 fly.interceptors.request.use(request => {
   request.url = host + request.url;
 

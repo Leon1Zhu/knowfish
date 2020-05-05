@@ -9,12 +9,12 @@ Component({
         selectedIconPath: "/image/home2.png",
         text: "首页"
       },
-      // {
-      //   pagePath: "/pages/index/index",
-      //   iconPath: "/image/knowledge1.png",
-      //   selectedIconPath: "/image/knowledge2.png",
-      //   text: "知识"
-      // },
+      {
+        pagePath: "/pages/knowledge/knowledge",
+        iconPath: "/image/knowledge1.png",
+        selectedIconPath: "/image/knowledge2.png",
+        text: "知识"
+      },
       {
         pagePath: "/pages/communication/index",
         iconPath: "/image/jiaoliu1.png",

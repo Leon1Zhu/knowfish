@@ -1,6 +1,6 @@
 import "./authPage.less";
 import { Component, ComponentClass, Config } from "@tarojs/taro";
-import { View, CoverImage, Button } from "@tarojs/components";
+import { View, CoverImage, Button, Image } from "@tarojs/components";
 
 class AuthPage extends Component {
   config: Config = {
@@ -28,10 +28,10 @@ class AuthPage extends Component {
         <View className="loginBg"></View>
         <View className="text">授权服务</View>
         <View className="info-content">
-          <CoverImage
+          <Image
             className="small-icon"
             src={require("image/icon-0.jpg")}
-          ></CoverImage>
+          ></Image>
           <View className="info-text">鱼乐鱼趣</View>
         </View>
         <Button open-type="getUserInfo" onGetUserInfo={this.getUserInfo}>

@@ -1,6 +1,6 @@
 import { Component } from "@tarojs/taro";
 import { ComponentClass } from "react";
-import { View, CoverImage } from "@tarojs/components";
+import { View, CoverImage, Image } from "@tarojs/components";
 
 import "./searchList.less";
 import { host } from "src/interceptor";
@@ -41,7 +41,7 @@ class SearchList extends Component<any, State> {
         key={data.latinName}
         onClick={this.goToDetail.bind(this, data)}
       >
-        <CoverImage
+        <Image
           className="card-img"
           src={`${host}${coverImgUrl}`}
           // style={`background: url(${host}${coverImgUrl}) no-repeat`}

@@ -32,6 +32,8 @@ class App extends Component<any, State> {
   config: Config = {
     pages: [
       "pages/communication/index",
+      "pages/knowledge/knowledge",
+      "pages/sourceOrigin/sourceOrigin",
       "pages/addCommunicate/addCommunicate",
       "pages/index/index",
       "pages/home/index",
@@ -57,12 +59,12 @@ class App extends Component<any, State> {
           selectedIconPath: "image/home2.png",
           text: "首页"
         },
-        // {
-        //   pagePath: "pages/index/index",
-        //   iconPath: "image/knowledge1.png",
-        //   selectedIconPath: "image/knowledge2.png",
-        //   text: "知识"
-        // },
+        {
+          pagePath: "pages/knowledge/knowledge",
+          iconPath: "image/knowledge1.png",
+          selectedIconPath: "image/knowledge2.png",
+          text: "知识"
+        },
         {
           pagePath: "pages/communication/index",
           iconPath: "image/jiaoliu1.png",
@@ -159,7 +161,7 @@ class App extends Component<any, State> {
   render() {
     return (
       <Provider store={store}>
-        <Communication />
+        <Index />
       </Provider>
     );
   }

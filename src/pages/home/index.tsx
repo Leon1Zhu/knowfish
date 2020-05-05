@@ -1,5 +1,5 @@
 import Taro, { Component, ComponentClass, Config } from "@tarojs/taro";
-import { View, ScrollView, CoverImage, Text } from "@tarojs/components";
+import { View, ScrollView, CoverImage, Text, Image } from "@tarojs/components";
 import PageNativeComponent from "../commons/pageNativeComponent";
 import { connect } from "@tarojs/redux";
 import { host } from "src/interceptor";
@@ -29,7 +29,7 @@ class HomePage extends Component<any, State> {
       this.$scope.getTabBar()
     ) {
       this.$scope.getTabBar().setData({
-        selected: 2
+        selected: 3
       });
     }
 
@@ -108,7 +108,7 @@ class HomePage extends Component<any, State> {
             recordInfo.map(record => {
               return (
                 <View key={record.id} className="record-content">
-                  <CoverImage
+                  <Image
                     className="cover-iamge"
                     src={`${host}${record.smallImageLink.replace(
                       "/fishing",
@@ -119,7 +119,7 @@ class HomePage extends Component<any, State> {
                         record.uploadedImageLink.replace("/fishing", "")
                       ]);
                     }}
-                  ></CoverImage>
+                  ></Image>
                   <View className="revord-date">
                     {tsFormatTime(record.createTime, "Y-M-D")}
                   </View>
@@ -148,16 +148,32 @@ class HomePage extends Component<any, State> {
         <PageNativeComponent
           className="my-discussion"
           title="我的交流"
+          showArrow
           onClick={this.toMyCommunicationPage}
         ></PageNativeComponent>
         {this.renderMyRevcord()}
         <PageNativeComponent
           className="ziliao-origin"
           title="资料来源"
+          showArrow
+          onClick={() => {
+            Taro.navigateTo({
+              url: "/pages/sourceOrigin/sourceOrigin"
+            });
+          }}
         ></PageNativeComponent>
-        <PageNativeComponent className="about-us" title="关于我们">
+        <PageNativeComponent
+          showArrow={false}
+          className="about-us"
+          title="关于我们"
+        >
           <View className="describe">
-            我是一段描述我是一段描述我是一段描述我是一段描述我是一段描述我是一段描述我是一段描述我是一段描述我是一段描述我是一段描述
+            <View>
+              识鱼目前可识别中国沿海约2500种的鱼类、900种的贝类和300种的甲壳类。
+            </View>
+            <View>
+              识鱼是中国水产科学研究院南海水产研究所资助的一个课题项目，项目成员是来自信息中心和渔业资源室在渔业分类方面的研究人员，在项目的执行过程中，本所与其他高校联合培养的研究生承担了大量的文字资料和图片的收集工作，而程序的前后台程序和算法的开发工作则是由来自杭州阿里巴巴公司的工程师和华南农业大学的学生承担的，在此向这些人表示感谢。
+            </View>
           </View>
           <View className="email">
             联系邮箱: <Text>Knowfish@163.com</Text>

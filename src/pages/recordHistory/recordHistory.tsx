@@ -2,7 +2,7 @@ import { Component, ComponentClass } from "@tarojs/taro";
 import { View, CoverImage } from "@tarojs/components";
 import { connect } from "@tarojs/redux";
 import "./recordHistory.less";
-import { host } from "src/interceptor";
+import { host, imgHost } from "src/interceptor";
 import { previewImage, tsFormatTime } from "../utils";
 import EmptyContent from "../commons/emptyContent";
 
@@ -48,7 +48,7 @@ class RecordHistory extends Component<any, State> {
               <View className="record-content">
                 <CoverImage
                   className="cover-iamge"
-                  src={`${host}${record.smallImageLink}`}
+                  src={`${imgHost}${record.smallImageLink}`}
                   onClick={() => {
                     previewImage([record.uploadedImageLink]);
                   }}
