@@ -132,6 +132,8 @@ class SearchPage extends Component<PageStateProps, State> {
             </View>
           </View>
         ) : (
+          searchData &&
+          searchData.length > 0 &&
           !!searchKey && <EmptyContent content="暂无数据"></EmptyContent>
         )}
 
