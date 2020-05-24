@@ -127,7 +127,7 @@ class HomePage extends Component<any, State> {
               );
             })
           ) : (
-            <EmptyContent content="暂无数据"></EmptyContent>
+            <EmptyContent content="暂无数据" />
           )}
         </ScrollView>
       </View>
@@ -139,10 +139,7 @@ class HomePage extends Component<any, State> {
     return (
       <View className="home-page">
         <View className="user-info">
-          <CoverImage
-            className="user-header-image"
-            src={userInfo.avatarUrl}
-          ></CoverImage>
+          <image class="user-header-image" src={userInfo.avatarUrl}></image>
           {userInfo.nickName}
         </View>
         <PageNativeComponent

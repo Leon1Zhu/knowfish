@@ -32,6 +32,7 @@ class App extends Component<any, State> {
   config: Config = {
     pages: [
       "pages/index/index",
+      "pages/search/index",
       "pages/communication/index",
       "pages/knowledge/knowledge",
       "pages/sourceOrigin/sourceOrigin",
@@ -40,7 +41,6 @@ class App extends Component<any, State> {
       "pages/recordHistory/recordHistory",
       "pages/detail/index",
       "pages/authPage/authPage",
-      "pages/search/index",
       "pages/share/index",
       "pages/share/shareDetail",
       "pages/camera/camera"

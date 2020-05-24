@@ -23,53 +23,41 @@ import withWeapp from "@tarojs/with-weapp";
 import { setSearchResult } from "../../actions/searchActions";
 import "./camera.less";
 
-@withWeapp({
-  data: {
-    goto_history_animation: "",
-    goto_snap_animation: "",
-    goto_search_animation: "",
-    animation: "",
-    snap_button_animation: "",
-    album_button_animation: "",
-    history_button_animation: "",
-    search_button_animation: "",
-    condition: ""
-  },
+@connect(
+  ({ searchResultReducer, userReducer }) => ({
+    searchResultReducer,
+    userReducer
+  }),
+  dispatch => ({
+    setResult(data) {
+      dispatch(setSearchResult(data));
+    }
+  })
+)
+class _C extends Taro.Component {
+  config = {
+    navigationBarTitleText: "识鱼",
+    disableScroll: true
+  };
 
-  onLoad: function(options) {
-    //const device = wx.getSystemInfoSync()
-    Taro.setNavigationBarTitle({
-      title: "拍照识别"
-    });
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function() {
-    this.setData({
-      condition: ""
-    });
-  },
-
-  goto_history: function(event) {
+  goto_history = event => {
     var that = this;
     Taro.navigateTo({
       url: "../history/history"
     });
-  },
+  };
 
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage: function() {
+  onShareAppMessage = () => {
     return {
       title: "分享",
       path: "pages/camera/camera"
     };
-  },
+  };
 
-  takePhoto: () => {
+  takePhoto = () => {
     var that = this;
     const ctx = Taro.createCameraContext();
     ctx.takePhoto({
@@ -152,9 +140,9 @@ import "./camera.less";
         });
       }
     });
-  },
+  };
 
-  chooseimage: () => {
+  chooseimage = () => {
     var that = this;
     Taro.chooseImage({
       count: 1, // 默认9
@@ -234,85 +222,55 @@ import "./camera.less";
         });
       }
     });
-  }
-})
-@connect(
-  ({ searchResultReducer, userReducer }) => ({
-    searchResultReducer,
-    userReducer
-  }),
-  dispatch => ({
-    setResult(data) {
-      dispatch(setSearchResult(data));
-    }
-  })
-)
-class _C extends Taro.Component {
-  config = {
-    navigationBarTitleText: "识鱼",
-    disableScroll: true
   };
 
   render() {
-    const { src, condition } = this.data;
     return (
       <Block>
         <View>
-          {condition ? (
-            <View>
-              <Image
-                mode="aspectFit"
-                style="width: 100vw; height: 100vh;"
-                src={src}
-              ></Image>
-            </View>
-          ) : (
-            <View>
-              <Camera
-                className="photo"
-                devicePosition="back"
-                flash="off"
-                onError={this.error}
-                style="width: 100vw; height: 100vh;"
-              >
-                <CoverView className="white_box">
-                  <CoverImage src={require("image/box1.png")}></CoverImage>
+          <View>
+            <Camera
+              className="photo"
+              devicePosition="back"
+              flash="off"
+              onError={this.error}
+              style="width: 100vw; height: 100vh;"
+            >
+              <CoverView className="white_box">
+                <CoverImage src={require("image/box1.png")}></CoverImage>
+              </CoverView>
+              <CoverView className="button_cover_view">
+                <CoverView className="top_button_cover_view">
+                  <CoverView
+                    className="snap_button_cover_view"
+                    onClick={this.takePhoto}
+                  >
+                    <CoverImage src={require("image/tap.png")}></CoverImage>
+                  </CoverView>
                 </CoverView>
-                <CoverView className="button_cover_view">
-                  <CoverView className="top_button_cover_view">
+                <CoverView className="bottom_button_cover_view">
+                  <CoverView className="history_cover_view">
                     <CoverView
-                      className="snap_button_cover_view"
-                      onClick={this.takePhoto}
+                      className="history_button_cover_view"
+                      onClick={this.goto_history}
                     >
-                      <CoverImage src={require("image/tap.png")}></CoverImage>
+                      <CoverImage
+                        src={require("image/history.png")}
+                      ></CoverImage>
                     </CoverView>
                   </CoverView>
-                  <CoverView className="bottom_button_cover_view">
-                    <CoverView className="history_cover_view">
-                      <CoverView
-                        className="history_button_cover_view"
-                        onClick={this.goto_history}
-                      >
-                        <CoverImage
-                          src={require("image/history.png")}
-                        ></CoverImage>
-                      </CoverView>
-                    </CoverView>
-                    <CoverView className="album_cover_view">
-                      <CoverView
-                        className="album_button_cover_view"
-                        onClick={this.chooseimage}
-                      >
-                        <CoverImage
-                          src={require("image/album.png")}
-                        ></CoverImage>
-                      </CoverView>
+                  <CoverView className="album_cover_view">
+                    <CoverView
+                      className="album_button_cover_view"
+                      onClick={this.chooseimage}
+                    >
+                      <CoverImage src={require("image/album.png")}></CoverImage>
                     </CoverView>
                   </CoverView>
                 </CoverView>
-              </Camera>
-            </View>
-          )}
+              </CoverView>
+            </Camera>
+          </View>
         </View>
       </Block>
     );

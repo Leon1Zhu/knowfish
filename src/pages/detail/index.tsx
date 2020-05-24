@@ -81,15 +81,17 @@ class DetailPage extends Component<Props, State> {
 
   render() {
     const { data } = this.state;
+
     return (
       <View className="detail-page">
         <View
           className="iconfont iconArtboardCopy"
           onClick={this.handleGoToSharePage}
         ></View>
-        <CoverView className="image-content">
-          <Image className="card-img" src={`${host}${data.smallImage}`}></Image>
-        </CoverView>
+        <CoverImage
+          className="card-img-detail"
+          src={`${host}${data.smallImage}`}
+        ></CoverImage>
 
         <View className="detail-info">
           <View className="name-infos">
@@ -100,8 +102,6 @@ class DetailPage extends Component<Props, State> {
           {this.renderFishInfo("俗名", data.nickname)}
           {this.renderFishInfo("识别特征", data.feature)}
           {this.renderFishInfo("生活习性", data.livingHabit)}
-          {this.renderFishInfo("地理分布", data.area)}
-
           <View className="info-item">
             <View className="info-title">参考图</View>
             <View className="info-content">
@@ -125,6 +125,7 @@ class DetailPage extends Component<Props, State> {
               )}
             </View>
           </View>
+          {this.renderFishInfo("地理分布", data.area)}
 
           <View className="info-source">
             <View className="info-source-icon">*</View> 资料来源

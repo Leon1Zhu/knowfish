@@ -68,7 +68,6 @@ class SharePicturePage extends Component<any, State> {
 
   onShareAppMessage(res) {
     const { fishData } = this.state;
-    console.log(fishData);
     return {
       title: fishData.name,
       path: `/pages/share/shareDetail?latinName=${this.$router.params.latinName}`

@@ -76,6 +76,13 @@ class SearchPage extends Component<PageStateProps, State> {
     this.setState({
       searchKey: searchValue
     });
+
+    if (!e.detail.value) {
+      this.setState({
+        searchData: []
+      });
+      return;
+    }
     Taro.showLoading({
       title: "搜索中"
     });
@@ -114,7 +121,7 @@ class SearchPage extends Component<PageStateProps, State> {
           <View onClick={this.toScan} className="iconfont iconcamera"></View>
         </View>
 
-        {searchData && searchData.length < 1 && !searchKey ? (
+        {searchData && searchData.length < 1 && !searchKey && (
           <View className="person-serarch-list">
             <View className="person-search-text">大家都在搜</View>
             <View className="list-content">
@@ -131,14 +138,13 @@ class SearchPage extends Component<PageStateProps, State> {
               })}
             </View>
           </View>
-        ) : (
-          searchData &&
-          searchData.length > 0 &&
-          !!searchKey && <EmptyContent content="暂无数据"></EmptyContent>
+        )}
+        {searchData && searchData.length < 1 && !!searchKey && (
+          <EmptyContent content="暂无数据" />
         )}
 
-        {searchData && searchData.length > 0 && (
-          <SearchList data={searchData}></SearchList>
+        {searchData && searchData.length > 0 && !!searchKey && (
+          <SearchList data={searchData} />
         )}
       </View>
     );

@@ -112,8 +112,6 @@ class Communication extends Component<Props, State> {
   getArticles = () => {
     const isMyArticle = this.$router.params.isMyArticle;
 
-    console.log(111);
-
     Taro.showLoading({
       title: "数据加载中"
     });
@@ -145,7 +143,6 @@ class Communication extends Component<Props, State> {
   };
 
   inputFocus(article) {
-    console.log(article);
     this.setState({
       article
     });
@@ -172,6 +169,8 @@ class Communication extends Component<Props, State> {
             <View className="time-info">{timeago(article.createTime)}</View>
           </View>
         </View>
+
+        <View className="article-content">{article.articleContent}</View>
 
         <Image
           className="fish-img"

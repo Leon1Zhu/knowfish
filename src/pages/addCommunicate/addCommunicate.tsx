@@ -107,6 +107,7 @@ class AddCommunicate extends Component<any, State> {
               value: e.detail.value
             });
           }}
+          maxlength={50}
           className="add-input"
           placeholder="描述下想和大家交流的鱼，和大家一起分享有趣的小鱼故事哦"
           placeholderClass="input-plac-class"

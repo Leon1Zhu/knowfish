@@ -14,10 +14,10 @@ class EmptyContent extends Component<Props, any> {
     return (
       <View className="empty-content">
         <View className="empty-image">
-          <CoverImage
-            className="empty-image-content"
+          <image
+            class="empty-image-content"
             src={require("image/empty.png")}
-          ></CoverImage>
+          ></image>
         </View>
         <View className="content">{content}</View>
       </View>
