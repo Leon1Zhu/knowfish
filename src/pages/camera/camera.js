@@ -65,9 +65,6 @@ class _C extends Taro.Component {
 
       success: res => {
         var that1 = that;
-        that1.setData({
-          src: res.tempImagePath
-        });
         var tempFilePaths = res.tempImagePath;
         Taro.showLoading({
           title: "识别中"
@@ -82,7 +79,6 @@ class _C extends Taro.Component {
           },
           name: "file",
           success: res => {
-            console.log(res);
             try {
               var code = JSON.parse(res.data).code;
             } catch (e) {
@@ -165,7 +161,6 @@ class _C extends Taro.Component {
           },
           name: "file",
           success: res => {
-            console.log(res);
             try {
               var code = JSON.parse(res.data).code;
             } catch (e) {
@@ -249,22 +244,14 @@ class _C extends Taro.Component {
                   </CoverView>
                 </CoverView>
                 <CoverView className="bottom_button_cover_view">
-                  <CoverView className="history_cover_view">
-                    <CoverView
-                      className="history_button_cover_view"
-                      onClick={this.goto_history}
-                    >
-                      <CoverImage
-                        src={require("image/history.png")}
-                      ></CoverImage>
-                    </CoverView>
-                  </CoverView>
                   <CoverView className="album_cover_view">
                     <CoverView
                       className="album_button_cover_view"
                       onClick={this.chooseimage}
                     >
-                      <CoverImage src={require("image/album.png")}></CoverImage>
+                      <CoverImage
+                        src={require("../../image/album.png")}
+                      ></CoverImage>
                     </CoverView>
                   </CoverView>
                 </CoverView>

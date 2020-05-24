@@ -29,6 +29,10 @@ class State {
   focusInput = false;
 
   value = "";
+
+  userInfo: any;
+
+  tempValue;
 }
 
 @connect(({ userReducer }) => ({
@@ -55,19 +59,25 @@ class Communication extends Component<Props, State> {
   }
 
   componentDidMount() {
+    Taro.getUserInfo().then(userInfo => {
+      this.setState({
+        userInfo: userInfo.userInfo
+      });
+    });
     wx.onKeyboardHeightChange(res => {
       if (res.height === 0) {
         this.setState({
           height: 0,
-          article: {},
           focusInput: false
         });
       } else {
-        this.setState({
-          focusInput: true,
-          height: res.height,
-          value: ""
-        });
+        if (res.height !== this.state.height) {
+          this.setState({
+            focusInput: true,
+            height: res.height,
+            value: ""
+          });
+        }
       }
     });
   }
@@ -150,6 +160,7 @@ class Communication extends Component<Props, State> {
 
   renderCommunicateItem(article: any) {
     const { userReducer } = this.props;
+    const { tempValue } = this.state;
 
     const isModifyUser = article.user.userId === userReducer.loginInfo.openId;
     return (
@@ -192,21 +203,36 @@ class Communication extends Component<Props, State> {
         </View>
 
         <Input
-          onClick={() => {
-            this.inputFocus(article);
-          }}
+          onClick={this.inputFocus.bind(this, article)}
           className="comment-input"
           placeholder="写评论"
           placeholderClass="plac-input"
-          value={undefined}
-          focus={false}
+          onInput={e => {
+            this.setState({
+              tempValue: ""
+            });
+            return "";
+          }}
+          value={tempValue}
         />
       </View>
     );
   }
 
   handleAddComment = () => {
-    const { article, value } = this.state;
+    const { article, value, userInfo } = this.state;
+
+    Taro.showLoading({
+      title: "数据加载中"
+    });
+
+    this.setState({
+      focusInput: false,
+      height: 0,
+      article: {}
+    });
+
+    Taro.hideKeyboard();
 
     Taro.request({
       url: host + "/api/addComment.do",
@@ -217,7 +243,7 @@ class Communication extends Component<Props, State> {
         },
         user: {
           userId: this.props.userReducer.loginInfo.openId,
-          userName: article.user.userName
+          userName: userInfo.nickName
         },
         content: value
       }
@@ -225,7 +251,9 @@ class Communication extends Component<Props, State> {
       .then(res => {
         this.getArticles();
       })
-      .catch(err => {});
+      .catch(err => {
+        errorHandle();
+      });
   };
 
   render() {

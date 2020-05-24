@@ -86,13 +86,12 @@ class Index extends Component<any, PageState> {
           className="iconfont iconArtboardCopy"
           onClick={this.goToShare}
         ></View>
-        <CoverImage
-          className="day-guess-img"
-          src={`${host}${randomInfo.smallImage}`}
-        ></CoverImage>
+        <image class="day-guess-img" src={`${host}${randomInfo.smallImage}`} />
         <View className="day-guess-text">每日新知·{randomInfo.name}</View>
         <View className="day-guess-answer-list">
-          {randomInfo.livingHabit ? randomInfo.livingHabit : "暂无"}
+          {randomInfo.livingHabit
+            ? `${randomInfo.livingHabit}色法师法师打发斯蒂芬撒地方了喀什东路咖啡机阿斯利康大姐夫拉设计费卢卡斯加法拉盛的进来；开发加上了；会计法爱丽丝的减肥啦电视剧分类；开始的减肥了； 爱上建档立卡；房价爱上了；点击法拉盛；大姐夫拉时代峻峰拉时代峻峰了； 傲娇受得了；放适量；大姐夫拉设计费啦经理肯定撒娇福利卡三等奖`
+            : "暂无"}
         </View>
       </View>
     );

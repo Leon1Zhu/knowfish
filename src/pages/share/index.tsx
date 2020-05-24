@@ -22,7 +22,7 @@ class SharePicturePage extends Component<any, State> {
 
   qqmapsdk;
 
-  componentDidShow() {
+  componentDidMount() {
     Taro.showLoading({
       title: "加载中"
     });
@@ -54,6 +54,7 @@ class SharePicturePage extends Component<any, State> {
       Taro.getUserInfo()
     ])
       .then(res => {
+        console.log(res);
         setPictureBycreateCanvasContext(res, data, this.qqmapsdk);
       })
       .catch(err => {
