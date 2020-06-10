@@ -33,6 +33,7 @@ class App extends Component<any, State> {
     pages: [
       "pages/index/index",
       "pages/search/index",
+      "pages/textview/index",
       "pages/communication/index",
       "pages/knowledge/knowledge",
       "pages/sourceOrigin/sourceOrigin",

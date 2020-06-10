@@ -125,17 +125,22 @@ function setFootContent(
   userInfo: Taro.getUserInfo.SuccessCallbackResult,
   ctx: Taro.CanvasContext
 ) {
-  circleImg(ctx, _.get(userInfo, "userInfo.avatarUrl", ""), 20, 600, 25);
-  ctx.beginPath();
-  ctx.setFontSize(10);
-  ctx.setFillStyle("rgba(0,0,0,0.4)");
-  ctx.fillText(userText, 74, 617);
-  ctx.fillText("鱼乐渔趣 | 长按小程序拍照识鱼", 74, 637);
+  wx.getImageInfo({
+    src: _.get(userInfo, "userInfo.avatarUrl", ""),
+    success(res) {
+      circleImg(ctx, res.path, 20, 600, 25);
+      ctx.beginPath();
+      ctx.setFontSize(10);
+      ctx.setFillStyle("rgba(0,0,0,0.4)");
+      ctx.fillText(userText, 74, 617);
+      ctx.fillText("鱼乐渔趣 | 长按小程序拍照识鱼", 74, 637);
 
-  ctx.stroke();
-  ctx.draw();
+      ctx.stroke();
+      ctx.draw();
 
-  Taro.hideLoading();
+      Taro.hideLoading();
+    }
+  });
 }
 
 function getTextX(text) {

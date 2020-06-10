@@ -1,13 +1,5 @@
 import { Component, ComponentClass, Config } from "@tarojs/taro";
-import {
-  View,
-  Icon,
-  CoverImage,
-  Input,
-  Button,
-  Textarea,
-  Image
-} from "@tarojs/components";
+import { View, Icon, Input, Button, Image } from "@tarojs/components";
 
 import "./index.less";
 import { host, imgHost } from "src/interceptor";
@@ -65,19 +57,15 @@ class Communication extends Component<Props, State> {
       });
     });
     wx.onKeyboardHeightChange(res => {
-      if (res.height === 0) {
+      if (res.height === 0 && this.state.height > 0) {
+        // this.setState({
+        //   height: 0
+        // });
+      } else if (res.height > 0 && res.height !== this.state.height) {
         this.setState({
-          height: 0,
-          focusInput: false
+          // height: res.height,
+          value: ""
         });
-      } else {
-        if (res.height !== this.state.height) {
-          this.setState({
-            focusInput: true,
-            height: res.height,
-            value: ""
-          });
-        }
       }
     });
   }
@@ -153,6 +141,12 @@ class Communication extends Component<Props, State> {
   };
 
   inputFocus(article) {
+    if (this.state.height > 0) {
+      this.setState({
+        height: 0,
+        value: ""
+      });
+    }
     this.setState({
       article
     });
@@ -207,11 +201,12 @@ class Communication extends Component<Props, State> {
           className="comment-input"
           placeholder="写评论"
           placeholderClass="plac-input"
-          onInput={e => {
+          confirmType="send"
+          onConfirm={e => {
             this.setState({
               tempValue: ""
             });
-            return "";
+            this.handleAddComment(e.detail.value);
           }}
           value={tempValue}
         />
@@ -219,15 +214,14 @@ class Communication extends Component<Props, State> {
     );
   }
 
-  handleAddComment = () => {
-    const { article, value, userInfo } = this.state;
+  handleAddComment = value => {
+    const { article, userInfo } = this.state;
 
     Taro.showLoading({
       title: "数据加载中"
     });
 
     this.setState({
-      focusInput: false,
       height: 0,
       article: {}
     });
@@ -257,7 +251,7 @@ class Communication extends Component<Props, State> {
   };
 
   render() {
-    const { articles, height, focusInput } = this.state;
+    const { articles, height } = this.state;
     return (
       <View className="communication-page">
         <Icon
@@ -273,10 +267,7 @@ class Communication extends Component<Props, State> {
           <EmptyContent content="暂无数据"></EmptyContent>
         )}
 
-        <View
-          className={`commentInputView ${height > 0 && "show"}`}
-          style={{ bottom: height + "px" }}
-        >
+        <View className={`commentInputView ${height > 0 && "show"}`}>
           <View className="commentInput">
             <Input
               className="input"
@@ -288,7 +279,7 @@ class Communication extends Component<Props, State> {
 
                 return e.detail.value;
               }}
-              focus={focusInput}
+              focus={this.state.height > 0}
               placeholder="写评论"
             />
           </View>

@@ -54,7 +54,6 @@ class SharePicturePage extends Component<any, State> {
       Taro.getUserInfo()
     ])
       .then(res => {
-        console.log(res);
         setPictureBycreateCanvasContext(res, data, this.qqmapsdk);
       })
       .catch(err => {
