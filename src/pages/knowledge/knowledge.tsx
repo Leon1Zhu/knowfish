@@ -1,6 +1,6 @@
 import "./knowledge.less";
 import { Component, ComponentClass, Config } from "@tarojs/taro";
-import { View, ScrollView, Image } from "@tarojs/components";
+import { View, ScrollView, Image, Text } from "@tarojs/components";
 import EmptyContent from "../commons/emptyContent";
 import { host } from "src/interceptor";
 import { tsFormatTime } from "../utils";
@@ -66,43 +66,12 @@ class Knowledge extends Component<Props, State> {
               >
                 <View className="left-content">
                   <View className="top-content">
-                    <View className="title">{text.title}</View>
+                    <Text className="title">{text.title}</Text>
                   </View>
                   <View className="bottom-content">
                     <View className="author">{text.author}</View>
                     <View className="time">
-                      {tsFormatTime(item.content.create_time, "Y-M-D")}
-                    </View>
-                  </View>
-                </View>
-                <View className="right-content">
-                  <Image className="text-img" src={text.thumb_url}></Image>
-                </View>
-              </View>
-            );
-          })}
-          {texts.map((item: any, index) => {
-            const text = item.content.news_item && item.content.news_item[0];
-            console.log(text);
-            return (
-              <View
-                onClick={() => {
-                  Taro.navigateTo({
-                    url: `/pages/textview/index?src=${encodeURIComponent(
-                      text.url
-                    )}`
-                  });
-                }}
-                className="text-view"
-              >
-                <View className="left-content">
-                  <View className="top-content">
-                    <View className="title">{text.title}</View>
-                  </View>
-                  <View className="bottom-content">
-                    <View className="author">{text.author}</View>
-                    <View className="time">
-                      {tsFormatTime(item.content.create_time, "Y-M-D")}
+                      {tsFormatTime(item.content.create_time * 1000, "Y-M-D")}
                     </View>
                   </View>
                 </View>

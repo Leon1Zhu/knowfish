@@ -11,14 +11,17 @@
         font-size: 28px;
         height: 144px;
         margin-right: 24px;
+        width: calc(100% - 120px);
 
-        flex: 1;
         .top-content {
           color: #131313;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          height: 120px;
+          .title {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            height: 120px;
+            display: block;
+          }
         }
         .bottom-content {
           display: flex;
@@ -28,9 +31,13 @@
       }
 
       .right-content {
+        display: flex;
+        align-items: center;
         .text-img {
-          height: 144px;
-          width: 144px;
+          margin-top: 10px;
+          height: 120rpx;
+          width: 240rpx;
+          line-height: 200px;
         }
       }
     }

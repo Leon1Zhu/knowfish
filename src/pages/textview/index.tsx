@@ -21,7 +21,6 @@ class TextView extends Component<Props, State> {
 
   render() {
     const { src } = this.state;
-    console.log(src);
     return <WebView src={src} />;
   }
 }
