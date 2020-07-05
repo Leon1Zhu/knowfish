@@ -76,7 +76,11 @@ class Knowledge extends Component<Props, State> {
                   </View>
                 </View>
                 <View className="right-content">
-                  <Image className="text-img" src={text.thumb_url}></Image>
+                  <Image
+                    mode="widthFix"
+                    className="text-img"
+                    src={text.thumb_url}
+                  ></Image>
                 </View>
               </View>
             );

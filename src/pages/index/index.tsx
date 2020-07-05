@@ -86,7 +86,11 @@ class Index extends Component<any, PageState> {
           className="iconfont iconArtboardCopy"
           onClick={this.goToShare}
         ></View>
-        <image class="day-guess-img" src={`${host}${randomInfo.smallImage}`} />
+        <image
+          mode="heightFix"
+          class="day-guess-img"
+          src={`${host}${randomInfo.smallImage}`}
+        />
         <View className="day-guess-text">每日新知·{randomInfo.name}</View>
         <View className="day-guess-answer-list">
           {randomInfo.livingHabit ? `${randomInfo.livingHabit}` : "暂无"}

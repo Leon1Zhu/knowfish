@@ -1,4 +1,4 @@
-import Taro, { Component, ComponentClass, Config } from "@tarojs/taro";
+import Taro, { Component, ComponentClass, Config, getApp } from "@tarojs/taro";
 import { View, ScrollView, CoverImage, Text, Image } from "@tarojs/components";
 import PageNativeComponent from "../commons/pageNativeComponent";
 import { connect } from "@tarojs/redux";
@@ -55,6 +55,7 @@ class HomePage extends Component<any, State> {
   }
 
   toMyCommunicationPage = () => {
+    wx.setStorageSync("isMyArticle", true);
     wx.switchTab({ url: "/pages/communication/index?isMyArticle=true" });
   };
 

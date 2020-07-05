@@ -1,5 +1,6 @@
-import { Component, ComponentClass, Config } from "@tarojs/taro";
+import { Component, ComponentClass, Config, getApp } from "@tarojs/taro";
 import { View, Icon, Input, Button, Image } from "@tarojs/components";
+import * as _ from "lodash";
 
 import "./index.less";
 import { host, imgHost } from "src/interceptor";
@@ -108,7 +109,13 @@ class Communication extends Component<Props, State> {
   };
 
   getArticles = () => {
-    const isMyArticle = this.$router.params.isMyArticle;
+    const isMyArticle = wx.getStorageSync("isMyArticle");
+
+    if (isMyArticle) {
+      wx.removeStorage({
+        key: "isMyArticle"
+      });
+    }
 
     Taro.showLoading({
       title: "数据加载中"
@@ -121,6 +128,7 @@ class Communication extends Component<Props, State> {
         let articles = res.data.data;
 
         if (isMyArticle) {
+          console.log(this.props.userReducer.loginInfo.openId);
           articles =
             articles &&
             articles.filter(
@@ -129,9 +137,11 @@ class Communication extends Component<Props, State> {
             );
         }
 
-        this.setState({
-          articles
-        });
+        if (!_.isEqual(articles, this.state.articles)) {
+          this.setState({
+            articles
+          });
+        }
 
         Taro.hideLoading();
       })
@@ -152,41 +162,51 @@ class Communication extends Component<Props, State> {
     });
   }
 
-  renderCommunicateItem(article: any) {
+  renderCommunicateItem = (articleItem: any, index: number) => {
     const { userReducer } = this.props;
-    const { tempValue } = this.state;
+    const { tempValue, articles } = this.state;
 
-    const isModifyUser = article.user.userId === userReducer.loginInfo.openId;
+    const isModifyUser =
+      articleItem.user.userId === userReducer.loginInfo.openId;
     return (
-      <View className="article-item">
+      <View
+        className="article-item"
+        key={articleItem.articleId}
+        id={articleItem.articleId}
+      >
         {isModifyUser && (
           <View
             className="delete-text"
-            onClick={this.deleteCommunication.bind(this, article)}
+            onClick={this.deleteCommunication.bind(this, articleItem)}
           >
             删除
           </View>
         )}
         <View className="userinfo-content">
-          <Image className="user-image" src={article.user.userIconUrl} />
+          <Image className="user-image" src={articleItem.user.userIconUrl} />
           <View className="right-content">
-            <View className="user-name">{article.user.userName}</View>
-            <View className="time-info">{timeago(article.createTime)}</View>
+            <View className="user-name">{articleItem.user.userName}</View>
+            <View className="time-info">{timeago(articleItem.createTime)}</View>
           </View>
         </View>
 
-        <View className="article-content">{article.articleContent}</View>
+        <View className="article-content">{articleItem.articleContent}</View>
 
         <Image
           className="fish-img"
-          src={imgHost + article.articleImgs}
-          onClick={() => {
+          src={imgHost + articleItem.articleImgs}
+          id={articleItem.articleId}
+          onClick={e => {
+            const id = e.target.id;
+            const article = (articles || []).find(
+              item => item.articleId === id
+            );
             previewImage([article.articleImgs]);
           }}
         />
 
         <View className="commoent-conetnt">
-          {article.comments.map(comment => {
+          {articleItem.comments.map(comment => {
             return (
               <View className="comment-item">
                 <View className="user-info">{comment.user.userName}:</View>
@@ -197,7 +217,7 @@ class Communication extends Component<Props, State> {
         </View>
 
         <Input
-          onClick={this.inputFocus.bind(this, article)}
+          onClick={this.inputFocus.bind(this, articleItem)}
           className="comment-input"
           placeholder="写评论"
           placeholderClass="plac-input"
@@ -212,7 +232,7 @@ class Communication extends Component<Props, State> {
         />
       </View>
     );
-  }
+  };
 
   handleAddComment = value => {
     const { article, userInfo } = this.state;
@@ -252,6 +272,11 @@ class Communication extends Component<Props, State> {
 
   render() {
     const { articles, height } = this.state;
+
+    const elements = (articles || []).map((articleItem, index) => {
+      return this.renderCommunicateItem(articleItem, index);
+    });
+
     return (
       <View className="communication-page">
         <Icon
@@ -262,7 +287,7 @@ class Communication extends Component<Props, State> {
           onClick={this.toAddPage}
         />
         {articles && articles.length > 0 ? (
-          articles.map(article => this.renderCommunicateItem(article))
+          elements
         ) : (
           <EmptyContent content="暂无数据"></EmptyContent>
         )}
