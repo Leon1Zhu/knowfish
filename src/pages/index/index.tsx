@@ -87,7 +87,7 @@ class Index extends Component<any, PageState> {
           onClick={this.goToShare}
         ></View>
         <image
-          mode="heightFix"
+          mode="widthFix"
           class="day-guess-img"
           src={`${host}${randomInfo.smallImage}`}
         />

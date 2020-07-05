@@ -88,10 +88,7 @@ class DetailPage extends Component<Props, State> {
           className="iconfont iconArtboardCopy"
           onClick={this.handleGoToSharePage}
         ></View>
-        <CoverImage
-          className="card-img-detail"
-          src={`${host}${data.smallImage}`}
-        ></CoverImage>
+        <Image className="card-img-detail" src={`${host}${data.smallImage}`} />
 
         <View className="detail-info">
           <View className="name-infos">
