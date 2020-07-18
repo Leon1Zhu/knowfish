@@ -149,7 +149,17 @@ class HomePage extends Component<any, State> {
           showArrow
           onClick={this.toMyCommunicationPage}
         ></PageNativeComponent>
-        {this.renderMyRevcord()}
+        {/* {this.renderMyRevcord()} */}
+        <PageNativeComponent
+          className="ziliao-origin"
+          title="识别记录"
+          showArrow
+          onClick={() => {
+            Taro.navigateTo({
+              url: "/pages/recordHistory/recordHistory"
+            });
+          }}
+        ></PageNativeComponent>
         <PageNativeComponent
           className="ziliao-origin"
           title="资料来源"
@@ -161,7 +171,12 @@ class HomePage extends Component<any, State> {
           }}
         ></PageNativeComponent>
         <PageNativeComponent
-          showArrow={false}
+          showArrow
+          onClick={() => {
+            Taro.navigateTo({
+              url: "/pages/about/index"
+            });
+          }}
           className="about-us"
           title="关于我们"
         >

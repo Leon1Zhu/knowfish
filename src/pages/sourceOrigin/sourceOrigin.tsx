@@ -1,4 +1,4 @@
-import { Component, ComponentClass } from "@tarojs/taro";
+import { Component, ComponentClass, Config } from "@tarojs/taro";
 import { View, Image } from "@tarojs/components";
 
 import "./sourceOrigin.less";
@@ -8,6 +8,9 @@ class Props {}
 class State {}
 
 class SourceOrigin extends Component<Props, State> {
+  config: Config = {
+    navigationBarTitleText: "资料来源"
+  };
   render() {
     return (
       <View className="source-origin-page">

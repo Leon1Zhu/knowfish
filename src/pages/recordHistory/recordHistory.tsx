@@ -1,4 +1,4 @@
-import { Component, ComponentClass } from "@tarojs/taro";
+import { Component, ComponentClass, Config } from "@tarojs/taro";
 import { View, CoverImage } from "@tarojs/components";
 import { connect } from "@tarojs/redux";
 import "./recordHistory.less";
@@ -14,6 +14,10 @@ class State {
   userReducer
 }))
 class RecordHistory extends Component<any, State> {
+  config: Config = {
+    navigationBarTitleText: "识别记录"
+  };
+
   componentDidMount() {
     Taro.request({
       url: host + "/api/getIdentifiedRecords.do",
