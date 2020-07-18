@@ -35,6 +35,7 @@ class App extends Component<any, State> {
       "pages/search/index",
       "pages/textview/index",
       "pages/communication/index",
+      "pages/share/shareDetail",
       "pages/knowledge/knowledge",
       "pages/sourceOrigin/sourceOrigin",
       "pages/addCommunicate/addCommunicate",
@@ -43,7 +44,6 @@ class App extends Component<any, State> {
       "pages/detail/index",
       "pages/authPage/authPage",
       "pages/share/index",
-      "pages/share/shareDetail",
       "pages/camera/camera"
     ],
     permission: {

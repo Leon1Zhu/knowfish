@@ -48,7 +48,7 @@ class ShareDetailPage extends Component<any, State> {
     const { fishData } = this.state;
     return {
       title: fishData.name,
-      path: `/page/shareDetail?id=${this.$router.params.id}`
+      path: `/page/shareDetail?latinName=${this.$router.params.id}`
     };
   }
 
@@ -56,15 +56,16 @@ class ShareDetailPage extends Component<any, State> {
     const { userInfo, fishData } = this.state;
     return (
       <View className="share-detail">
-        <View className="fish-name">{fishData.name}</View>
-        <CoverView className="play">
-          <Image className="img" src={`${host}${fishData.smallImage}`} />
-        </CoverView>
+        <Image
+          className="img"
+          mode="widthFix"
+          src={`${host}${fishData.smallImage}`}
+        />
         <View className="user-info">
-          <CoverView className="user-head left-content">
+          <View className="user-head left-content">
             <Image className="head" src={`${userInfo.avatarUrl}`} />
-            <CoverView className="user-name">{userInfo.nickName}</CoverView>
-          </CoverView>
+            <View className="user-name">{userInfo.nickName}</View>
+          </View>
 
           {/* <View className="right-content">8小时前</View> */}
         </View>

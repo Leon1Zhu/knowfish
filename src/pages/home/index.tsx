@@ -92,7 +92,7 @@ class HomePage extends Component<any, State> {
     return (
       <View className="my-record">
         <View className="title">
-          <View className="record-text">我的识鱼记录</View>
+          <View className="record-text">识别记录</View>
           <View
             className="allRecord"
             onClick={() => {

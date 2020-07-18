@@ -52,7 +52,7 @@ class Knowledge extends Component<Props, State> {
         <ScrollView className="scroll_view">
           {texts.map((item: any, index) => {
             const text = item.content.news_item && item.content.news_item[0];
-            console.log(text);
+            // console.log(text);
             return (
               <View
                 onClick={() => {
