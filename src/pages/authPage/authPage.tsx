@@ -32,7 +32,7 @@ class AuthPage extends Component {
             className="small-icon"
             src={require("image/icon-0.jpg")}
           ></Image>
-          <View className="info-text">鱼乐鱼趣</View>
+          <View className="info-text">南海小渔</View>
         </View>
         <Button open-type="getUserInfo" onGetUserInfo={this.getUserInfo}>
           授权登录
