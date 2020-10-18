@@ -117,7 +117,8 @@ class _C extends Taro.Component {
               this.props.setResult(outcome);
               Taro.navigateTo({
                 url: `/pages/detail/index?latinName=${outcome[0] &&
-                  outcome[0].latinName}`
+                  outcome[0].latinName}&recognitionRate= ${outcome[0] &&
+                  outcome[0].recognitionRate}`
               });
             }
           },
@@ -200,7 +201,8 @@ class _C extends Taro.Component {
               this.props.setResult(outcome);
               Taro.navigateTo({
                 url: `/pages/detail/index?latinName=${outcome[0] &&
-                  outcome[0].latinName}`
+                  outcome[0].latinName}&recognitionRate= ${outcome[0] &&
+                  outcome[0].recognitionRate}`
               });
             }
           },

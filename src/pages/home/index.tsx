@@ -86,6 +86,17 @@ class HomePage extends Component<any, State> {
       });
   };
 
+  goNavgateToMiniProgram = (appid, path?) => {
+    wx.navigateToMiniProgram({
+      appId: appid,
+      path: path || "page/index/index",
+      success(res) {
+        // 打开成功
+        console.log(res);
+      }
+    });
+  };
+
   renderMyRevcord() {
     const { recordInfo } = this.state;
 
@@ -171,6 +182,39 @@ class HomePage extends Component<any, State> {
           }}
         ></PageNativeComponent>
         <PageNativeComponent
+          className="know-link"
+          title="识鱼"
+          showArrow
+          onClick={() => {
+            this.goNavgateToMiniProgram(
+              "wxa49f41d543e9df9d",
+              "/pages/identify/identify"
+            );
+          }}
+        ></PageNativeComponent>
+        <PageNativeComponent
+          className="know-link"
+          title="识贝"
+          showArrow
+          onClick={() => {
+            this.goNavgateToMiniProgram(
+              "wxadbfb8342619b0fd",
+              "/pages/identify/identify"
+            );
+          }}
+        ></PageNativeComponent>
+        <PageNativeComponent
+          className="know-link"
+          title="识虾蟹"
+          showArrow
+          onClick={() => {
+            this.goNavgateToMiniProgram(
+              "wx81c8f0022c621480",
+              "/pages/identify/identify"
+            );
+          }}
+        ></PageNativeComponent>
+        <PageNativeComponent
           showArrow
           onClick={() => {
             Taro.navigateTo({
@@ -179,19 +223,7 @@ class HomePage extends Component<any, State> {
           }}
           className="about-us"
           title="关于我们"
-        >
-          <View className="describe">
-            <View>
-              识鱼目前可识别中国沿海约2500种的鱼类、900种的贝类和300种的甲壳类。
-            </View>
-            <View>
-              识鱼是中国水产科学研究院南海水产研究所资助的一个课题项目，项目成员是来自信息中心和渔业资源室在渔业分类方面的研究人员，在项目的执行过程中，本所与其他高校联合培养的研究生承担了大量的文字资料和图片的收集工作，而程序的前后台程序和算法的开发工作则是由来自杭州阿里巴巴公司的工程师和华南农业大学的学生承担的，在此向这些人表示感谢。
-            </View>
-          </View>
-          <View className="email">
-            联系邮箱: <Text>Knowfish@163.com</Text>
-          </View>
-        </PageNativeComponent>
+        ></PageNativeComponent>
       </View>
     );
   }

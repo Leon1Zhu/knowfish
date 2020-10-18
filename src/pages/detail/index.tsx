@@ -38,7 +38,7 @@ class DetailPage extends Component<Props, State> {
         });
 
         Taro.setNavigationBarTitle({
-          title: res.data.name
+          title: (res.data && res.data.name) || ""
         });
         Taro.hideLoading();
       });
@@ -82,6 +82,12 @@ class DetailPage extends Component<Props, State> {
   render() {
     const { data } = this.state;
 
+    const recognitionRate =
+      this.$router.params.recognitionRate &&
+      Number(this.$router.params.recognitionRate);
+
+    const recogniText = `置信度：${(recognitionRate as any) * 100 + "%"}`;
+
     return (
       <View className="detail-page">
         <View
@@ -95,39 +101,53 @@ class DetailPage extends Component<Props, State> {
             <View className="ke-shu">{data.type}</View>
             <View className="name">{data.name}</View>
             <View className="latinname">{data.latinName}</View>
+            {recognitionRate && recognitionRate > -1 && (
+              <View className="recognitionRate">{recogniText}</View>
+            )}
           </View>
-          {this.renderFishInfo("俗名", data.nickname)}
-          {this.renderFishInfo("识别特征", data.feature)}
-          {this.renderFishInfo("生活习性", data.livingHabit)}
-          <View className="info-item">
-            <View className="info-title">参考图</View>
-            <View className="info-content">
-              {data.fig1 && (
-                <View
-                  className="img-url-content"
-                  onClick={this.preview_figImage.bind(this, data)}
-                  style={data.fig1 != "暂缺" ? { color: "#1488f5" } : ""}
-                >
-                  {data.fig1 != "暂缺" ? "参考图1" : "暂缺"}
-                </View>
-              )}
-              {data.fig2 && data.fig2 != "暂缺" && (
-                <View
-                  className="img-url-content"
-                  onClick={this.preview_figImage.bind(this, data)}
-                  style={data.fig2 != "暂缺" ? { color: "#1488f5" } : ""}
-                >
-                  ，参考图2
-                </View>
-              )}
-            </View>
-          </View>
-          {this.renderFishInfo("地理分布", data.area)}
 
-          <View className="info-source">
-            <View className="info-source-icon">*</View> 资料来源
-            {data.informationSource}
-          </View>
+          {recognitionRate > 0.5 ||
+          (!recognitionRate && recognitionRate !== 0) ? (
+            <View>
+              {data.nickname &&
+                data.nickname !== "null" &&
+                this.renderFishInfo("俗名", data.nickname)}
+              {this.renderFishInfo("识别特征", data.feature)}
+              {this.renderFishInfo("生活习性", data.livingHabit)}
+              <View className="info-item">
+                <View className="info-title">参考图</View>
+                <View className="info-content">
+                  {data.fig1 && (
+                    <View
+                      className="img-url-content"
+                      onClick={this.preview_figImage.bind(this, data)}
+                      style={data.fig1 != "暂缺" ? { color: "#1488f5" } : ""}
+                    >
+                      {data.fig1 != "暂缺" ? "参考图1" : "暂缺"}
+                    </View>
+                  )}
+                  {data.fig2 && data.fig2 != "暂缺" && (
+                    <View
+                      className="img-url-content"
+                      onClick={this.preview_figImage.bind(this, data)}
+                      style={data.fig2 != "暂缺" ? { color: "#1488f5" } : ""}
+                    >
+                      ，参考图2
+                    </View>
+                  )}
+                </View>
+              </View>
+              {this.renderFishInfo("保护级别", data.level)}
+              {this.renderFishInfo("地理分布", data.area)}
+
+              <View className="info-source">
+                <View className="info-source-icon">*</View> 资料来源
+                {data.informationSource}
+              </View>
+            </View>
+          ) : (
+            <View>无法准确识别此物种，请使用其他识别小程序</View>
+          )}
         </View>
         <View className="share-content">
           <Button className="share-btn" onClick={this.handleGoToSharePage}>

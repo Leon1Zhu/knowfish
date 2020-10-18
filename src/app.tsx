@@ -47,6 +47,11 @@ class App extends Component<any, State> {
       "pages/share/index",
       "pages/camera/camera"
     ],
+    navigateToMiniProgramAppIdList: [
+      "wxa49f41d543e9df9d",
+      "wxadbfb8342619b0fd",
+      "wx81c8f0022c621480"
+    ],
     permission: {
       "scope.userLocation": {
         desc: "需要获取您的地理位置，请确认授权"
